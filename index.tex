@@ -1,0 +1,38 @@
+\documentclass[12pt,a4paper,draft]{scrreprt}
+
+% encoding
+\usepackage[utf8]{inputenc}
+
+% language
+\usepackage{csquotes}
+\usepackage[english]{babel}
+
+\usepackage[automark,headsepline,ilines]{scrpage2}
+
+% font family
+%\usepackage{palatino}
+
+% links
+\usepackage{hyperref}
+
+% syntax highlighting
+\usepackage[draft=false,outputdir=dist]{minted}
+\usemintedstyle{manni}
+
+% bib
+\usepackage[backend=biber,citestyle=verbose]{biblatex}
+\addbibresource{index.bib}
+
+\begin{document}
+  \pagenumbering{gobble}
+  \input{titlepage.tex}
+
+  \tableofcontents
+  \newpage
+
+  \pagenumbering{arabic}
+  \input{abstract.tex}
+  \input{content/index.tex}
+
+  \printbibliography
+\end{document}
