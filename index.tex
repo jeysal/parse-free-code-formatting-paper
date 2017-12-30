@@ -25,6 +25,12 @@
 \usepackage[backend=biber,autocite=footnote,style=authoryear,citestyle=verbose]{biblatex}
 \addbibresource{index.bib}
 
+% footnotes
+\usepackage[hang,multiple]{footmisc}
+% enable in floats
+\usepackage{footnote}
+\makesavenoteenv{figure}
+
 \begin{document}
   \pagenumbering{gobble}
   \input{titlepage.tex}
