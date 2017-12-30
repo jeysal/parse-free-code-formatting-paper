@@ -15,9 +15,11 @@
 % links
 \usepackage{hyperref}
 
-% syntax highlighting
+% source code formatting & highlighting
 \usepackage[draft=false,outputdir=dist]{minted}
 \usemintedstyle{manni}
+
+\newcommand{\code}{\mintinline{text}}
 
 % bib
 \usepackage[backend=biber,citestyle=verbose]{biblatex}
