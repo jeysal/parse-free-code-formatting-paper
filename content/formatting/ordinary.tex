@@ -1,0 +1,195 @@
+\section{An ordinary formatting procedure}
+A code formatter that takes an unformatted source code file as its input and
+produces a formatted source code file as its output typically operates in three main steps:
+\begin{enumerate}
+  \item \textit{lexing} (also known as \textit{tokenizing} or \textit{lexical analysis})
+  \item \textit{parsing} (also known as \textit{syntactic analysis})
+  \item \textit{printing} (also known as \textit{unparsing}\autocite{prettyprinting})
+\end{enumerate}
+
+\paragraph{Lexing} transforms a source code string to an array of tokens,
+such as keywords, identifiers, literals and operators.
+For the input string
+\begin{minted}{c}
+  if(a==b){c=a+2*b;}
+\end{minted}
+in a C-like language, it might return the tokens:
+\begin{minted}{text}
+  if, (, a, ==, b, ), {, c, =, a, +, 2, *, b, ;, }
+\end{minted}
+
+This step is not exclusive to formatters; lexing is a common operation that is also performed by
+compilers and other static analysis tools that operate on input source code.
+However, lexers often differ slightly depending on the purpose of a tool.
+For example, a compiler might completely ignore comments in the source code and
+not create any tokens from them, because the final machine code instructions it emits
+would not contain comments anyway.
+
+Some lexers also generate virtual tokens that are not directly present as characters in the source code.
+The Python language reference describes a lexing procedure that generates
+\code{INDENT} and \code{DEDENT} tokens in order to preserve information about line indentation.
+\autocite[Chapter: 2.1.8. (Lexical Analysis --- Line Structure --- Indentation)]{pythonLangRef}
+The Go programming language specification describes a lexing procedure
+that generates semicolon tokens automatically according to a few simple rules,
+\autocite[Chapter: Lexical Elements --- Semicolons]{goProgLangSpec}
+while the ECMAScript language specification describes a more complicated
+automatic semicolon insertion mechanism for the parsing step.
+\autocite[Chapter: 11.9 (Lexical Grammar --- Automatic Semicolon Insertion)]{ecmascriptSpec}
+
+\paragraph{Parsing} transforms an array of tokens to a \textit{parse tree} (also known as
+\textit{concrete syntax tree}) or, more commonly, to an \textit{abstract syntax tree} (\textit{AST}).
+The former still contains all of the information about the tokens in the original source code,
+while the latter is on a higher level and only describes
+the structure of the program represented by the source code.
+
+This difference can also have an impact on formatting, depending on the individual tree format.
+A formatter that uses a parse tree might preserve the brackets in the expression
+\mintinline{c}{1 + (2 * 3)}, while a formatter that uses an abstract syntax tree might
+not be able to do so, because all it sees is a multiplication expression inside of an addition expression,
+not whether the original source was \mintinline{c}{1 + 2 * 3} or \mintinline{c}{1 + (2 * 3)}
+or \mintinline{c}{((1) + ((2) * ((3))))}.
+Therefore, the formatter would always output the first variation,
+regardless of any parentheses occurring in the input source code;
+or it would always output the second variation in case it is configured to generate code
+that displays the precedence of multiplication over addition more clearly.
+
+\begin{figure}\label{fig:ifStmtAst}
+  \footnotesize \centering
+  \begin{forest}
+    [{Program}
+    [ {IfStmt}, edge label={node[midway,left]{\scriptsize \code{body[0]}}}
+    [  {BinaryExpr (op: \code{==})}, edge label={node[midway,left]{\scriptsize \code{test}}}
+    [   {Identifier (name: \code{a})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
+    [   {Identifier (name: \code{b})}, edge label={node[midway,right]{\scriptsize \code{right}}}]]
+    [  {BlockStmt}, edge label={node[midway,right]{\scriptsize \code{consequent}}}
+    [   {ExprStmt}, edge label={node[midway,left]{\scriptsize \code{body[0]}}}
+    [    {AssignmentExpr (op: \code{=})}, edge label={node[midway,left]{\scriptsize \code{expression}}}
+    [     {Identifier (name: \code{c})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
+    [     {BinaryExpr (op: \code{+})}, edge label={node[midway,right]{\scriptsize \code{right}}}
+    [      {Identifier (name: \code{a})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
+    [      {BinaryExpr (op: \code{*})}, edge label={node[midway,right]{\scriptsize \code{right}}}
+    [       {Literal (value: \code{2})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
+    [       {Identifier (name: \code{b})}, edge label={node[midway,right]{\scriptsize \code{right}}}]]]]]]]]
+  \end{forest}
+  \caption{An \textit{abstract syntax tree} for a short if statement,
+    based on the ESTree Spec \autocite{estreeSpec} for ECMAScript ASTs.
+    `Statement' is abbreviated `Stmt', `Expression' is abbreviated `Expr'
+  and `operator' is abbreviated `op' in order to save space.}
+\end{figure}
+
+For the input tokens
+\begin{minted}{text}
+  if, (, a, ==, b, ), {, c, =, a, +, 2, *, b, ;, }
+\end{minted}
+in a C-like language, a parser might return the abstract syntax tree shown in figure~\ref{fig:ifStmtAst}.
+
+\paragraph{Printing} transforms an abstract syntax tree (or parse tree)
+to a string of source code that matches the desired format.
+
+For the input AST shown in figure~\ref{fig:ifStmtAst} in a C-like language,
+a printer might return the code string:
+
+\begin{minted}{c}
+  if (a == b) {
+    c = a + 2 * b;
+  }
+\end{minted}
+
+Above example shows the first three of the four main concerns of the printing step in a code formatter:
+
+\subparagraph{Spacing} is necessary because we want to see gaps for instance
+between the \code{a} and \code{==} tokens as well as after the \code{)} token.
+We do, however, not want to see gaps for instance
+between the \code{(} and \code{a} tokens as well as between the \code{b} and \code{;} tokens.
+Adding spaces where none existed in the original source code
+or removing spaces where they existed in the original source code
+might also change the semantics or even validity of the code.
+For example, removing a space between a keyword and an identifier
+would combine those tokens into a single, longer identifier.
+For a less obvious example that shows how dangerous this can be, consider the following: In JavaScript,
+\begin{minted}{javascript}
+  console.log(1 .toString())
+\end{minted}
+is a valid program and prints the result of
+calling the method \code{toString} on the number \code{1}, whereas
+\begin{minted}{javascript}
+  console.log(1.toString())
+\end{minted}
+is invalid, because \code{1} and \code{.} are no longer separate tokens;
+instead, they now form a single number literal token (\code{1.})
+that is followed immediately by an identifier (\code{toString}).
+
+\subparagraph{Indentation} helps us understand the control flow,
+among other nestable structures, in the source code more easily.
+We want to increase the indentation level at the start of a block statement and decrease it at the end.
+In the aforementioned example, the assignment inside of the consequent block of the if statement
+has its indentation level increased by one relative to the lines immediately above and below
+that are not entirely contained inside the block statement.
+
+\subparagraph{Hard line breaks} force the insertion of a line break between two tokens.
+We want this to happen in the obvious positions after an opening brace or semicolon and before a closing brace.
+Depending on our desired format we also want to use hard line breaks in some less obvious situtations.
+For example, it might be useful to apply them before switch cases in order to reformat
+\begin{minted}{c}
+  switch(a) {
+    case 1: case 2:
+      a = 3;
+  }
+\end{minted}
+to
+\begin{minted}{c}
+  switch(a) {
+    case 1:
+    case 2:
+      a = 3;
+  }
+\end{minted}
+
+\bigbreak{}
+The fourth aspect that was missing in the given example is necessary
+because our output devices can only display characters in a row up to their finite width and
+because we can only comfortably read lines up to a finite length.
+\subparagraph{Soft line breaks} are used in places where the formatter is allowed to break
+if it helps avoid exceeding the given maximum allowed line length.
+Most lines of code will contain more than one soft line break and usually more soft line breaks
+than we actually need to bring the line length down below the limit.
+Therefore, an algorithm is required to select those soft line breaks
+that split up the line optimally by our standards.
+Given the input
+\begin{minted}{c}
+  someVariable = someFunction(someParameter, someOtherParameter);
+\end{minted}
+and line size 50, do we want to print
+\begin{minted}{c}
+  someVariable =
+    someFunction(someParameter, someOtherParameter);
+\end{minted}
+, breaking at the highest possible node in the AST, or
+\begin{minted}{c}
+  someVariable = someFunction(
+    someParameter, someOtherParameter);
+\end{minted}
+, distributing the line lengths as evenly as possible, or
+\begin{minted}{c}
+  someVariable = someFunction(someParameter,
+    someOtherParameter);
+\end{minted}
+, breaking as late as possible, or perhaps
+\begin{minted}{c}
+  someVariable = someFunction(
+    someParameter,
+    someOtherParameter,
+  );
+\end{minted}
+, grouping the parameter list like we would group statements in a block,
+which can be especially handy if the language allows us to place the training comma in the function call?
+This concern is arguably the most complex aspect and has been subject to a substantial amount of research in the past.
+\autocite{designPrettyPrintingLib}\autocite{prettierPrinter}
+
+\bigbreak{}
+Different formatters also preserve the original shape of the source code to a varying degree.
+For example, it might be desirable to print empty lines
+exactly in those places where the original source code contained them,
+\autocite[Section: Empty lines]{prettierRationale}
+because these empty lines usually function as separators between logically coherent sections of the code,
+which cannot possibly be guessed from the tree structure by the printer.
