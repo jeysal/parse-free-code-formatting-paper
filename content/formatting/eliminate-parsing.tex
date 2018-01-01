@@ -91,3 +91,35 @@ we have to deal with tight limitations on what we can safely change in the code 
 This means that we cannot always just pick a preferred formatting style that we want to produce,
 but instead have to accept compromises on the output style and focus on what we \textit{can} produce.
 Allowing for further user configuration options of the desired output format would be borderline inconceivable.
+
+\subsection{Uses}
+This kind of formatter would not be suitable for some of the common use cases, including both
+formatters integrated into an IDE or editor that run automatically or on key press and
+formatters that provide a command-line interface (CLI) for use by developers.
+Those will usually be applied to small or medium-sized source code files,
+so the increased performance when compared to traditional formatters does not provide
+a sufficiently large benefit to justify a trade-off in quality of the code style.
+
+There are, however, some cases where the efficiency and potential streaming capability could
+turn out to be useful for a more `on-the-fly' formatting.
+Browser developer tools usually include a formatter for JavaScript files,
+because those files are typically served as minified code that has
+no spacing, no line breaks and consequentially no indentation at all.
+Besides minification, the JavaScript preprocessing pipeline often also includes a bundling step
+that merges all script and module files from the original source code into a single or very few
+files in order to eliminate the need to serve each source file in a separate HTTP request.
+Because of this common practice, the bundled files delivered to the browser can be quite large ---
+sometimes multiple megabytes in size --- and the formatting process can take multiple seconds to complete.
+Decreasing the total formatting time and the delay until the first lines are printed
+could improve the developer experience in this use case,
+while the `less pretty' formatting style would be tolerable,
+since the code produced is usually looked at rather briefly and rarely modified.
+
+We could also provide a CLI for the formatter and apply it to code files viewed in a terminal,
+where a large delay before displaying the content would be unacceptable.
+In particular, the formatter could be invoked on external code, perhaps downloaded or decompiled code.
+The \code{less} pager utility supports file preprocessing by an arbitrary program
+through the \code{LESSOPEN} environment variable; \autocite{lessMan}
+this could be used for a formatter just as it is sometimes used for syntax highlighting
+and it would greatly benefit from streaming-enabled formatting.
+Some IDEs and editors can invoke an external program to process a file on keypress as well.
