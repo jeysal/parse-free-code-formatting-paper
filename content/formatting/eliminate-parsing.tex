@@ -71,3 +71,23 @@ but not its syntactic grammar, can be more easily adapted to format other langua
 even if their syntax is vastly different.
 
 \subsection{Drawbacks}
+\paragraph{Consistency}
+On the other hand, it is clear that we will not be able to achieve the same degree of consistency
+for some of the harder aspects of formatting
+when the abstract syntax of expressions is the same,
+but the concrete syntax differs.
+
+\paragraph{Power}
+We cannot trivially make significant changes --- such as removing parentheses as mentioned earlier ---
+to the code, because the lack of syntactic information renders us unable to easily judge whether
+\begin{itemize}
+  \item such a modification would alter the semantics of the code and
+  \item such a modification would actually increase the readability of the code
+\end{itemize}
+
+\paragraph{Flexibility}
+Information about constructs in the code and about the greater picture is often unavailable and
+we have to deal with tight limitations on what we can safely change in the code without altering semantics.
+This means that we cannot always just pick a preferred formatting style that we want to produce,
+but instead have to accept compromises on the output style and focus on what we \textit{can} produce.
+Allowing for further user configuration options of the desired output format would be borderline inconceivable.
