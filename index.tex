@@ -9,9 +9,6 @@
 
 \usepackage[automark,headsepline,ilines]{scrpage2}
 
-% font family
-%\usepackage{palatino}
-
 % links
 \usepackage{hyperref}
 
@@ -20,6 +17,12 @@
 \usemintedstyle{manni}
 
 \newcommand{\code}{\mintinline{text}}
+
+% font families
+%\usepackage{palatino}
+\usepackage{fontspec}
+\setmonofont{FiraCode-Regular}
+\setminted{fontsize=\small}
 
 % floats
 \usepackage{float}
