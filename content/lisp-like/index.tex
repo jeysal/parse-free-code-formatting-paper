@@ -38,11 +38,7 @@ because they would be treated like some other token that we already have in our 
 \section{Desired code format}
 These tokens are for example sufficient to build the factorial algorithm
 from the Lisp programming language Wikipedia page:
-\begin{minted}{lisp}
-  (defun factorial (n)
-    (if (= n 0) 1
-        (* n (factorial (- n 1)))))
-\end{minted}
+\input{content/lisp-like/factorial-example.tex}
 
 We would consider this code example well-formatted ---
 the spacing is consistent,
@@ -98,9 +94,96 @@ is printed as:
 \end{minted}
 
 \subsection{Indentation}
+To achieve an indentation similar to that of given example,
+we can keep track of the level of nested parentheses surrounding us using a counter.
+That counter is initialized with 0,
+incremented by 1 after we pass a \code{leftPar} and
+decremented by 1 before we pass a \code{rightPar}.
+After a line break is placed, we can determine the size of the whitespace we need to print
+by looking at the current state of the counter \textit{n}.
+We print \textit{n} tabs if our type of indentation is tabs,
+or \textit{n * m} spaces if our type of indentation is spaces,
+\textit{m} being a positive integer denoting how large our indentation steps should be.
+In the code examples shown here, we indent with two spaces each.
+
+We have not yet introduced a mechanism for inserting line breaks between tokens
+so everything would be printed in a single line and there is nothing to indent yet,
+but for visualization purposes we will assume that line breaks will be placed
+some particular spots and represent them as special hard break tokens.
+
+If we use the counter method to generate indentation for the tokens
+\begin{minted}{text}
+  (, avg, num1, <HARDBREAK>,
+  (, add, num2, <HARDBREAK>,
+  num3, ), <HARDBREAK>,
+  num4, )
+\end{minted}
+, we get the printed result:
+\begin{minted}{lisp}
+  (avg num1
+    (add num2
+      num3)
+    num4)
+\end{minted}
+This is an acceptable format, the indentation and dedentation make it
+quite easy to see which expression each atom belong to.
+It also saves a lot of space by never indenting more than required by the level of expression nesting,
+so we will not have to split up lines too often when dealing with the soft line breaking aspect.
+
+It is, however, not exactly the same formatting style that we see in the `factorial' example.
+Using our method, we would get the following code for the factorial function,
+again assuming that the line breaks remain the same:
+\begin{minted}{lisp}
+  (defun factorial (n)
+    (if (= n 0) 1
+      (* n (factorial (- n 1)))))
+\end{minted}
+Comparing this to the original factorial example code
+\input{content/lisp-like/factorial-example.tex}
+, we notice that while the first two lines are indented in the same way that we managed to reproduce,
+but the last line is indented by six spaces instead of four.
+Here, another indentation method is applied,
+one that aligns the start of the second and all following elements of a list
+by setting the indentation of the third and all following elements
+to the column where the second element was printed.
+This results in deeper indenting that takes up more space,
+but might be considered more readable by some.
+Unlike the example code, we will have to choose one of the two styles of indenting,
+but we can alternatively produce the latter `aligning' style as well and will do so later in the chapter.
+
+Finally, let us briefly clarify why we need to decrement the counter \textit{before} a \code{rightPar},
+although we increment it \textit{after} a \code{leftPar}.
+This is only relevant when there is a line break right before a \code{rightPar}.
+Consider the following code:
+\begin{minted}{lisp}
+  (add someLargeIdentifier someVeryLargeIdentifier)
+\end{minted}
+If our line length is limited to 25 characters,
+the only way to print the code without violating the limit is
+\begin{minted}{lisp}
+  ; line size 25
+  (add someLargeIdentifier
+    someVeryLargeIdentifier
+  )
+\end{minted}
+, putting the \code{rightPar} on a new line
+because it would be one character too much
+to appear immediately after \code{someVeryLargeIdentifier}.
+If this happens, we want the \code{rightPar} to be aligned with the corresponding \code{leftPar}.
+Not doing this would look particularly weird if there are deeper nested expressions,
+since the outer \code{rightPar} would appear as if it belonged to the inner \code{leftPar}:
+\begin{minted}{lisp}
+  ; line size 30
+  (add someLargeIdentifier
+    (sub someNestedIdentifier
+      someOtherNestedIdentifier)
+    )
+\end{minted}
+
 \subsection{Hard line breaks}
 \subsection{Soft line breaks}
 
 \section{Extensions}
 
-% TODO comments?
+% TODO indentation: aligning style
+% TODO comments
