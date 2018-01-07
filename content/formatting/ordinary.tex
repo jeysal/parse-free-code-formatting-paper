@@ -54,22 +54,22 @@ or it would always output the second variation in case it is configured to gener
 that displays the precedence of multiplication over addition more clearly.
 
 \begin{figure}\label{fig:ifStmtAst}
-  \footnotesize \centering
+  \centering \footnotesize \setminted{fontsize=\scriptsize}
   \begin{forest}
     [{Program}
-    [ {IfStmt}, edge label={node[midway,left]{\scriptsize \code{body[0]}}}
-    [  {BinaryExpr (op: \code{==})}, edge label={node[midway,left]{\scriptsize \code{test}}}
-    [   {Identifier (name: \code{a})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
-    [   {Identifier (name: \code{b})}, edge label={node[midway,right]{\scriptsize \code{right}}}]]
-    [  {BlockStmt}, edge label={node[midway,right]{\scriptsize \code{consequent}}}
-    [   {ExprStmt}, edge label={node[midway,left]{\scriptsize \code{body[0]}}}
-    [    {AssignmentExpr (op: \code{=})}, edge label={node[midway,left]{\scriptsize \code{expression}}}
-    [     {Identifier (name: \code{c})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
-    [     {BinaryExpr (op: \code{+})}, edge label={node[midway,right]{\scriptsize \code{right}}}
-    [      {Identifier (name: \code{a})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
-    [      {BinaryExpr (op: \code{*})}, edge label={node[midway,right]{\scriptsize \code{right}}}
-    [       {Literal (value: \code{2})}, edge label={node[midway,left]{\scriptsize \code{left}}}]
-    [       {Identifier (name: \code{b})}, edge label={node[midway,right]{\scriptsize \code{right}}}]]]]]]]]
+    [ {IfStmt}, edge label={node[midway,left]{\code{body[0]}}}
+    [  {BinaryExpr (op: \code{==})}, edge label={node[midway,left]{\code{test}}}
+    [   {Identifier (name: \code{a})}, edge label={node[midway,left]{\code{left}}}]
+    [   {Identifier (name: \code{b})}, edge label={node[midway,right]{\code{right}}}]]
+    [  {BlockStmt}, edge label={node[midway,right]{\code{consequent}}}
+    [   {ExprStmt}, edge label={node[midway,left]{\code{body[0]}}}
+    [    {AssignmentExpr (op: \code{=})}, edge label={node[midway,left]{\code{expression}}}
+    [     {Identifier (name: \code{c})}, edge label={node[midway,left]{\code{left}}}]
+    [     {BinaryExpr (op: \code{+})}, edge label={node[midway,right]{\code{right}}}
+    [      {Identifier (name: \code{a})}, edge label={node[midway,left]{\code{left}}}]
+    [      {BinaryExpr (op: \code{*})}, edge label={node[midway,right]{\code{right}}}
+    [       {Literal (value: \code{2})}, edge label={node[midway,left]{\code{left}}}]
+    [       {Identifier (name: \code{b})}, edge label={node[midway,right]{\code{right}}}]]]]]]]]
   \end{forest}
   \caption{An \textit{abstract syntax tree} for a short if statement,
     based on the ESTree Spec \autocite{estreeSpec} for ECMAScript ASTs.
