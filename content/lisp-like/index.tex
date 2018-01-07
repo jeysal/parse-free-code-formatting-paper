@@ -211,8 +211,44 @@ and must not insert another one if the \code{rightPar} is already followed by on
 otherwise we might end up printing more than one consecutive empty line.
 
 \subsection{Soft line breaks}
+As mentioned before, the placement of soft line breaks is the most complicated aspect,
+but also a well-explored one, with many good algorithms already developed and in use.
+Most of those are also quite efficient as far as time and space complexity are concerned,
+usually requiring asymptotically linear resources as the number of tokens in a line grows.
+
+We could, for example, use the algorithm proposed by Bagge \& Hasu.
+\autocite[Chapter: Line Breaking]{prettyGoodFormattingPipeline}
+For our Lisp-like language, we would be able to provide the necessary control tokens
+`nesting start' and `nesting end' without any parsing, simply by looking at the parentheses
+--- other languages might for example have `overloaded' tokens that complicate the matter
+and may require parsing to generate useful control tokens.
+
+It is important to keep in mind soft lines breaks will usually be the computationally
+most expensive aspect and are thus likely to be a critical path that affects performance the most.
+The other concerns usually do not require us to look at more than two tokens at once
+or go to a previous token in the stream at any time.
+There is not necessarily a hard border between contextual token processing and parsing;
+if our processing becomes increasingly complex because the language we want to format
+has a complex grammar or our line breaking algorithm requires extensive meta information,
+we might already be \textit{parsing} a simplified version of the syntactical grammar.
+
+For all of the strategies to achieve desirable soft line breaking behavior
+that were given in the introductory paragraphs on soft line breaks,
+we can come up with efficient approximations or exact algorithms.
+An algorithm like the one Bagge \& Hasu have developed can be used for breaking at positions
+that would be high in a syntax tree constructed by parsing the tokens.
+An algorithm like Oppen's \autocite{prettyprinting} and its derivates
+can be used for placing breaks so that parameter lists
+and other tokens that belong together form groups ---
+given that the language is simple enough
+so we can infer the necessary information without parsing.
+
+TODO
+simple algs (just break it up in the middle, then at 1/4 + 3/4, etc, see intro:softLineBreaks)
 
 \section{Extensions}
 
 % TODO indentation: aligning style
 % TODO comments
+% TODO full example?
+% TODO full commonlisp/scheme?
