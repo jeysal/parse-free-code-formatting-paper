@@ -21,7 +21,8 @@ there is no lexing goal nonterminal and whitespace is not accounted for.
 
 \begin{minted}{text}
 identifier  = ALPHA *(ALPHA / DIGIT)
-keyword     = "quote" / "lambda" / "defun" / "let" / "if" / "and" / "or"
+keyword     = "quote" / "lambda" / "defun" / "let"
+keyword     =/ "if" / "and" / "or"
 prefix      = "'" / "&"
 operator    = "=" / "+" / "-" / "*" / "/"
 boolLiteral = "true" / "false"
