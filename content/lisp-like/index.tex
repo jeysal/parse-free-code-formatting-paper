@@ -307,11 +307,42 @@ with \code{something}, something similar happens:
       0123456 789))
 \end{minted}
 
-% TODO soft line breaks: maybe break after prefix is disallowed by language
-% or we just don't want it because it looks terrible
-% => introduce break allowance based on our spacing and treat as single token
-% TODO same thing for parens, those would otherwise look bad and
-% more importantly inconsistent (break sometimes before, sometimes after)
+\subparagraph{Avoiding undesired separation}
+The most annoying issue about both of the `weird' code formats we produced is that
+\code{someIdentifier} is separated from its preceding \code{leftPar} by a line break,
+especially because the same thing is not applied to the code snippets
+\code{(identifier} or \code{(something} that occur earlier and have the same structure.
+We want to avoid the separation of token sequences like \code{(x}
+and its counterpart \code{y)}, including the case where multiple subsequent
+parentheses occur: \code{((x} or \code{y))}.
+We also want to avoid a similar separation issue if a break
+is inserted immediately after a prefix token,
+so constructs like \code{&x} always remain together.
+The latter would not only look terrible, it may also be forbidden by some languages
+with special treatment of prefixes.
+
+We notice that for the language we are dealing with,
+the token pairs that must not be separated by line breaks
+are exactly those token pairs that do not allow the insertion of a space between them.
+Because of this, we can base a system of line break allowance on our established spacing rules,
+effectively treating tokens that are printed with no space inbetween them as single tokens.
+
+This makes the two problematic examples more bearable
+and in this case even uniform among one another
+as well as consistent with the unproblematic example:
+\begin{minted}{lisp}
+  ; line size 26
+  (let something)
+  (identifier 012345 43210
+    (someIdentifier 0123456
+      789))
+
+  ; line size 25
+  (let something)
+  (something 012345 43210
+    (someIdentifier 0123456
+      789))
+\end{minted}
 
 % TODO what if indentation and/or single tokens are too large?
 % 1) limit indentation (meh, also does not solve problem if token is just too large)
