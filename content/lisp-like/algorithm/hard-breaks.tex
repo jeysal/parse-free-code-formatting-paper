@@ -1,0 +1,29 @@
+\subsection{Hard line breaks}
+The only source code position where we always want to break
+is after the completion of a top-level expression.
+We can use the same counter we introduced for indentation for this purpose as well
+by inserting a hard line break after a \code{rightPar} token if and only if
+the counter has been decremented to 0.
+This way, the tokens
+\begin{minted}{text}
+  (, define, x, (, +, 1, 2, ), ), (, display, x, )
+\end{minted}
+will be printed as
+\begin{minted}{scheme}
+  (define x (+ 1 2))
+  (display x)
+\end{minted}
+, with hard breaks inserted after the second and third \code{rightPar}, but not the first.
+
+We can also use hard line breaks to preserve empty lines
+that may have been present in the original source code.
+This feature has already been mentioned in the introduction and
+is usually indispensable for any practical formatter,
+because developers will need those empty lines in their code to structure it clearly.
+However, this does require changes to the lexer,
+so it can already insert hard line break tokens into the token stream
+whereever it finds a line that does not contain any token.
+Our counter-based hard break insertion will also need to take into account
+that it might find hard breaks already present in the token stream
+and must not insert another one if the \code{rightPar} is already followed by one,
+otherwise we might end up printing more than one consecutive empty line.

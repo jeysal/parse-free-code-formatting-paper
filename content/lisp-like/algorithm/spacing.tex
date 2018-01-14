@@ -1,0 +1,31 @@
+\subsection{Spacing}
+For our Lisp-like syntax, we want to separate most tokens with a space, with the following exceptions:
+\begin{itemize}
+  \item No space after a \code{leftParen},
+  \item no space before a \code{rightParen} and
+  \item no space after a \code{prefix}, which is not visible in the example.
+\end{itemize}
+
+To achieve this, all we need to do is define for each type of token
+whether it allows a leading space and whether it allows a trailing space.
+Then, we can look up between every two tokens
+whether the token on the left allows a trailing space and
+whether the token on the right allows a leading space and
+insert a space only if both do.
+Applying this procedure on the tokens
+\begin{minted}{text}
+  (, a, (, ', b, c, ), )
+\end{minted}
+results in the code output:
+\begin{minted}{lisp}
+  (a ('b c))
+\end{minted}
+
+It also works for a prefix preceding a list:
+\begin{minted}{text}
+  (, a, ', (, b, c, ), )
+\end{minted}
+is printed as:
+\begin{minted}{lisp}
+  (a '(b c))
+\end{minted}

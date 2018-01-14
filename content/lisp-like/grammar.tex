@@ -1,0 +1,29 @@
+\section{Grammar}
+We will not define the complete and formal lexical or syntactic grammar of the language,
+because most of that information would only be valuable for a parser,
+or for a lexer with the goal of producing tokens that can be easily parsed.
+Instead, we will define the types of tokens we have to deal with
+and only build up an intuitive understanding of how the language works
+based on the Lisp-like languages already out there,
+because intuition is also what we need decide how a `good' formatting style looks.
+
+The following ABNF specification outlines the primitives that may occur in the source code.
+As stated earlier, this is not a full lexical grammar ---
+there is no lexing goal nonterminal and whitespace is not accounted for.
+
+\begin{minted}{text}
+identifier  = ALPHA *(ALPHA / DIGIT)
+keyword     = "quote" / "lambda" / "defun" / "let"
+keyword     =/ "if" / "and" / "or"
+prefix      = "'" / "&"
+operator    = "=" / "+" / "-" / "*" / "/"
+boolLiteral = "true" / "false"
+numLiteral  = 1*DIGIT
+leftParen   = "("
+rightParen  = ")"
+\end{minted}
+
+We could, of course, conceive lots of additional keywords, operators,
+types of literals, prefixes and other tokens,
+but not many of them would be interesting with regard to code formatting,
+because they would be treated like some other token that we already have in our list.

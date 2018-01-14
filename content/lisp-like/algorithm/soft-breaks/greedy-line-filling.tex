@@ -1,0 +1,171 @@
+\paragraph{Greedy line-filling}
+Another one of the strategies, breaking as late as possible,
+is trivial to achieve and requires no more than one pass through the tokens in the line.
+In general, however, it does not print very well readable code.
+The indentation rules we have already established will take care of inserting
+the correct number of spaces or tabs whenever we insert a break.
+We keep track of the already printed line length by initializing it with the
+number of columns already filled out by the indentation and adding the number
+of characters in any token we print to it.
+We only print a token if it would not increase our column counter beyond
+the maximum allowed line length.
+Otherwise, we insert a line break and reset the counter, indenting as usual.
+Then we proceed with the remaining tokens until the next hard break.
+
+We also need to carefully consider the interaction with the other printing concerns.
+If we break between two tokens that were separated by a space,
+the line break must \textit{replace} that space.
+We can neither print the space before the line break, producing a line with a trailing space,
+nor can we print it after the line break, increasing the indentation of the new line
+beyond the indentation generated from our nesting counter.
+Concerning indentation, we must additionally take into account that \code{rightPar}s
+may be printed as the first token after a soft line break,
+and that we defined those to decrease the indentation level \textit{before} being printed.
+This means we must process not only the \textit{after}-effect on indentation of the previous token,
+but also the \textit{before}-effect of the following token \textit{before}
+printing the indentation whitespace that a new line after a soft break requires.
+
+This approach will ensure that too many tokens between two hard breaks will be spread
+across multiple lines, and it may do so in a reasonable way,
+for example when printing the following tokens with line size 25:
+\begin{minted}{text}
+  (, let, something, ), (, identifier, 012345,
+  43210, (, someIdentifier, 0123456, 789, ), )
+\end{minted}
+The resulting code with our standard indentation, spacing and hard breaking method
+and this greedy line-filling algorithm for soft breaks is:
+\begin{minted}{lisp}
+  ; line size 25
+  (let something)
+  (identifier 012345 43210
+    (someIdentifier 0123456
+      789))
+\end{minted}
+
+While this may seem like reasonable formatting style,
+it is really just a lucky token arrangement and line length.
+If we increase the line length by 1, the code we produce looks weird:
+\begin{minted}{lisp}
+  ; line size 26
+  (let something)
+  (identifier 012345 43210 (
+      someIdentifier 0123456
+      789))
+\end{minted}
+If we keep the line length but replace \code{identifier}
+with \code{something}, something similar happens:
+\begin{minted}{lisp}
+  ; line size 25
+  (let something)
+  (something 012345 43210 (
+      someIdentifier
+      0123456 789))
+\end{minted}
+
+\subparagraph{Avoiding undesired separation}
+The most annoying issue about both of the `weird' code formats we produced is that
+\code{someIdentifier} is separated from its preceding \code{leftPar} by a line break,
+especially because the same thing is not applied to the code snippets
+\code{(identifier} or \code{(something} that occur earlier and have the same structure.
+We want to avoid the separation of token sequences like \code{(x}
+and its counterpart \code{y)}, including the case where multiple subsequent
+parentheses occur: \code{((x} or \code{y))}.
+We also want to avoid a similar separation issue if a break
+is inserted immediately after a prefix token,
+so constructs like \code{&x} always remain together.
+The latter would not only look terrible, it may also be forbidden by some languages
+with special treatment of prefixes.
+
+We notice that for the language we are dealing with,
+the token pairs that must not be separated by line breaks
+are exactly those token pairs that do not allow the insertion of a space between them.
+Because of this, we can base a system of line break allowance on our established spacing rules,
+effectively treating tokens that are printed with no space inbetween them as single tokens.
+
+This makes the two problematic examples more bearable
+and in this case even uniform among one another
+as well as consistent with the unproblematic example:
+\begin{minted}{lisp}
+  ; line size 26
+  (let something)
+  (identifier 012345 43210
+    (someIdentifier 0123456
+      789))
+
+  ; line size 25
+  (let something)
+  (something 012345 43210
+    (someIdentifier 0123456
+      789))
+\end{minted}
+
+\subparagraph{Inevitable length limit violation}
+Excessive expression nesting leading to deep indentation
+that consumes most of the available columns
+or simply the occurence of overly large tokens
+can force us to violate the restrictions on maximum line length.
+There is no way to place soft line breaks so
+the following code does not exceed the line length limit,
+including breaking at every single possible position,
+even if we ignore the separation avoidance we just introduced:
+\begin{minted}{lisp}
+  ; limit -|
+  (
+    abc
+    (
+      def
+      (
+        ghi
+        (
+          jkl
+        )
+      )
+    )
+  )
+\end{minted}
+We could limit the width of indentation that we print to make this problem less likely to occur.
+But we cannot entirely eliminate the problem this way ---
+if we have to print a large token, the line length may still be exceeded,
+even without extraordinarily deep indentation:
+\begin{minted}{lisp}
+  ; limit 25 -------------|
+  (
+    abc
+    (
+      someVeryLargeIdentifier
+    )
+  )
+\end{minted}
+
+To mitigate the effect of such a violation and still
+print the remainder of the tokens in a reasonable way,
+we bump the maximum line length up to match
+the overhang we had to use for the offending token
+until the next hard line break.
+The following example is once again printed with our regular algorithm,
+including separation avoidance.
+\begin{minted}{lisp}
+  ; limit 15 ---|
+  (abc 12345
+    12345
+    largeIdentifier
+    0123456 0123456
+    0123456
+    0123456)
+\end{minted}
+The second \code{12345} does not fit into the same line anymore and is placed on a new line instead.
+\code{largeIdentifier} does not fit into that line, so it is placed on a new line as well.
+However, even on that new line,
+the token takes up too much horizontal space, overhanging by 2 characters.
+We have no choice but to print it like that and to temporarily bump our line length to 17.
+Because of the increased line length, the following line can hold two \code{0123456} tokens,
+which would otherwise have been printed on separate lines.
+The final two \code{0123456}s cannot be printed on one line,
+because we cannot separate the latter one from its closing \code{rightPar},
+which in turn cannot be printed on the same line because it would occupy column 18,
+exceeding even our increased line length.
+
+Retrospectively, we could have also printed both \code{12345}s on the same line,
+because our line length for this part of the code ended up being 17 instead of 15,
+but extending the algorithm to do this would require giving up the linear processing order
+and going back to a token we have already printed.
