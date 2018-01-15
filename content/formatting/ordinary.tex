@@ -55,35 +55,38 @@ regardless of any parentheses occurring in the input source code;
 or it would always output the second variation in case it is configured to generate code
 that displays the precedence of multiplication over addition more clearly.
 
-\begin{figure}
-  \centering \footnotesize \setminted{fontsize=\scriptsize}
-  \begin{forest}
-    [{Program}
-    [ {IfStmt}, edge label={node[midway,left]{\code{body[0]}}}
-    [  {BinaryExpr (op: \code{==})}, edge label={node[midway,left]{\code{test}}}
-    [   {Identifier (name: \code{a})}, edge label={node[midway,left]{\code{left}}}]
-    [   {Identifier (name: \code{b})}, edge label={node[midway,right]{\code{right}}}]]
-    [  {BlockStmt}, edge label={node[midway,right]{\code{consequent}}}
-    [   {ExprStmt}, edge label={node[midway,left]{\code{body[0]}}}
-    [    {AssignmentExpr (op: \code{=})}, edge label={node[midway,left]{\code{expression}}}
-    [     {Identifier (name: \code{c})}, edge label={node[midway,left]{\code{left}}}]
-    [     {BinaryExpr (op: \code{+})}, edge label={node[midway,right]{\code{right}}}
-    [      {Identifier (name: \code{a})}, edge label={node[midway,left]{\code{left}}}]
-    [      {BinaryExpr (op: \code{*})}, edge label={node[midway,right]{\code{right}}}
-    [       {Literal (value: \code{2})}, edge label={node[midway,left]{\code{left}}}]
-    [       {Identifier (name: \code{b})}, edge label={node[midway,right]{\code{right}}}]]]]]]]]
-  \end{forest}
-  \caption{An \textit{abstract syntax tree} for a short if statement,
-    based on the ESTree Spec \autocite{estreeSpec} for ECMAScript ASTs.
-    `Statement' is abbreviated `Stmt', `Expression' is abbreviated `Expr'
-  and `operator' is abbreviated `op' in order to save space.}\label{fig:ifStmtAst}
-\end{figure}
-
 For the input tokens
 \begin{minted}{text}
   if, (, a, ==, b, ), {, c, =, a, +, 2, *, b, ;, }
 \end{minted}
-in a C-like language, a parser might return the abstract syntax tree shown in figure~\ref{fig:ifStmtAst}.
+in a C-like language, a parser might return the abstract syntax tree
+shown in figure~\ref{fig:ifStmtAst} on a separate page.
+
+\begin{landscape}
+  \begin{figure}[h]
+    \centering \setminted{fontsize=\scriptsize}
+    \begin{forest}
+      for tree={l=1.6cm}
+      [{Program}
+      [ {IfStatement}, edge label={node[midway,left]{\code{body[0]}}}
+      [  {BinaryExpression (operator: \code{==})}, edge label={node[midway,left]{\code{test}}}
+      [   {Identifier (name: \code{a})}, edge label={node[midway,left]{\code{left}}}]
+      [   {Identifier (name: \code{b})}, edge label={node[midway,right]{\code{right}}}]]
+      [  {BlockStatement}, edge label={node[midway,right]{\code{consequent}}}
+      [   {ExpressionStatement}, edge label={node[midway,left]{\code{body[0]}}}
+      [    {AssignmentExpression (operator: \code{=})}, edge label={node[midway,left]{\code{expression}}}
+      [     {Identifier (name: \code{c})}, edge label={node[midway,left]{\code{left}}}]
+      [     {BinaryExpression (operator: \code{+})}, edge label={node[midway,right]{\code{right}}}
+      [      {Identifier (name: \code{a})}, edge label={node[midway,left]{\code{left}}}]
+      [      {BinaryExpression (operator: \code{*})}, edge label={node[midway,right]{\code{right}}}
+      [       {Literal (value: \code{2})}, edge label={node[midway,left]{\code{left}}}]
+      [       {Identifier (name: \code{b})}, edge label={node[midway,right]{\code{right}}}]]]]]]]]
+    \end{forest}
+    \vspace{2cm}
+    \caption{An \textit{abstract syntax tree} for a short if statement,
+      based on the ESTree Spec \autocite{estreeSpec} for ECMAScript ASTs.}\label{fig:ifStmtAst}
+  \end{figure}
+\end{landscape}
 
 \subsection{Printing}
 \textit{Printing} transforms an abstract syntax tree (or parse tree)
