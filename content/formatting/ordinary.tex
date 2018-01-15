@@ -164,28 +164,28 @@ Therefore, an algorithm is required to select those soft line breaks
 that split up the line optimally by our standards.
 Given the input
 \begin{minted}{c}
-  someVariable = someFunction(someParameter, someOtherParameter);
+  someVar = someFunc(someParam, someOtherParam);
 \end{minted}
 and line size 50, do we want to print
 \begin{minted}{c}
-  someVariable =
-    someFunction(someParameter, someOtherParameter);
+  someVar =
+    someFunc(someParam, someOtherParam);
 \end{minted}
 , breaking at the highest possible node in the AST, or
 \begin{minted}{c}
-  someVariable = someFunction(
-    someParameter, someOtherParameter);
+  someVar = someFunc(
+    someParam, someOtherParam);
 \end{minted}
 , distributing the line lengths as evenly as possible, or
 \begin{minted}{c}
-  someVariable = someFunction(someParameter,
-    someOtherParameter);
+  someVar = someFunc(someParam,
+    someOtherParam);
 \end{minted}
 , breaking as late as possible, or perhaps
 \begin{minted}{c}
-  someVariable = someFunction(
-    someParameter,
-    someOtherParameter,
+  someVar = someFunc(
+    someParam,
+    someOtherParam,
   );
 \end{minted}
 , grouping the parameter list like we would group statements in a block,
