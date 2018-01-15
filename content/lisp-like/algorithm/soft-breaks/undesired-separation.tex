@@ -1,0 +1,56 @@
+\paragraph{Avoiding undesired separation}
+While this may seem like reasonable formatting style,
+it is really just a lucky token arrangement and line length.
+If we increase the line length by 1, the code we produce looks weird:
+\begin{minted}{lisp}
+  ; line size 26
+  (let something)
+  (identifier 012345 43210 (
+      someIdentifier 0123456
+      789))
+\end{minted}
+If we keep the line length but replace \code{identifier}
+with \code{something}, something similar happens:
+\begin{minted}{lisp}
+  ; line size 25
+  (let something)
+  (something 012345 43210 (
+      someIdentifier
+      0123456 789))
+\end{minted}
+
+The most annoying issue about both of the `weird' code formats we produced is that
+\code{someIdentifier} is separated from its preceding \code{leftPar} by a line break,
+especially because the same thing is not applied to the code snippets
+\code{(identifier} or \code{(something} that occur earlier and have the same structure.
+We want to avoid the separation of token sequences like \code{(x}
+and its counterpart \code{y)}, including the case where multiple subsequent
+parentheses occur: \code{((x} or \code{y))}.
+We also want to avoid a similar separation issue if a break
+is inserted immediately after a prefix token,
+so constructs like \code{&x} always remain together.
+The latter would not only look terrible, it may also be forbidden by some languages
+with special treatment of prefixes.
+
+We notice that for the language we are dealing with,
+the token pairs that must not be separated by line breaks
+are exactly those token pairs that do not allow the insertion of a space between them.
+Because of this, we can base a system of line break allowance on our established spacing rules,
+effectively treating tokens that are printed with no space inbetween them as single tokens.
+
+This makes the two problematic examples more bearable
+and in this case even uniform among one another
+as well as consistent with the unproblematic example:
+\begin{minted}{lisp}
+  ; line size 26
+  (let something)
+  (identifier 012345 43210
+    (someIdentifier 0123456
+      789))
+
+  ; line size 25
+  (let something)
+  (something 012345 43210
+    (someIdentifier 0123456
+      789))
+\end{minted}

@@ -1,0 +1,70 @@
+\paragraph{Inevitable length limit violation}
+Excessive expression nesting leading to deep indentation
+that consumes most of the available columns
+or simply the occurence of overly large tokens
+can force us to violate the restrictions on maximum line length.
+There is no way to place soft line breaks so
+the following code does not exceed the line length limit,
+including breaking at every single possible position,
+even if we ignore the separation avoidance we just introduced:
+\begin{minted}{lisp}
+  ; limit -|
+  (
+    abc
+    (
+      def
+      (
+        ghi
+        (
+          jkl
+        )
+      )
+    )
+  )
+\end{minted}
+We could limit the width of indentation that we print to make this problem less likely to occur.
+But we cannot entirely eliminate the problem this way ---
+if we have to print a large token, the line length may still be exceeded,
+even without extraordinarily deep indentation:
+\begin{minted}{lisp}
+  ; limit 25 -------------|
+  (
+    abc
+    (
+      someVeryLargeIdentifier
+    )
+  )
+\end{minted}
+
+To mitigate the effect of such a violation and still
+print the remainder of the tokens in a reasonable way,
+we bump the maximum line length up to match
+the overhang we had to use for the offending token
+until the next hard line break.
+The following example is once again printed with our regular algorithm,
+including separation avoidance.
+\begin{minted}{lisp}
+  ; limit 15 ---|
+  (abc 12345
+    12345
+    largeIdentifier
+    0123456 0123456
+    0123456
+    0123456)
+\end{minted}
+The second \code{12345} does not fit into the same line anymore and is placed on a new line instead.
+\code{largeIdentifier} does not fit into that line, so it is placed on a new line as well.
+However, even on that new line,
+the token takes up too much horizontal space, overhanging by 2 characters.
+We have no choice but to print it like that and to temporarily bump our line length to 17.
+Because of the increased line length, the following line can hold two \code{0123456} tokens,
+which would otherwise have been printed on separate lines.
+The final two \code{0123456}s cannot be printed on one line,
+because we cannot separate the latter one from its closing \code{rightPar},
+which in turn cannot be printed on the same line because it would occupy column 18,
+exceeding even our increased line length.
+
+Retrospectively, we could have also printed both \code{12345}s on the same line,
+because our line length for this part of the code ended up being 17 instead of 15,
+but extending the algorithm to do this would require giving up the linear processing order
+and going back to a token we have already printed.
