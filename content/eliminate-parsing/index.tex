@@ -1,4 +1,4 @@
-\section{Eliminating the parsing step}
+\chapter{Eliminating the parsing step}
 Many of the works on prettyprinting that have been published ---
 such as the well-known one by Derek C. Oppen \autocite{prettyprinting} ---
 propose algorithms that place line breaks into a stream of tokens.
@@ -42,10 +42,10 @@ get better insight into its structure before attempting to prettyprint it,
 but what if we still try to create a formatter that actually omits that parsing step,
 printing out nicely formatted source code just based on the tokens recognized by the lexer?
 
-\subsection{Potential benefits}
-There are some obvious advantages that such a formatter would have:
+\section{Potential benefits}
+There are some obvious advantages that such a formatter would have.
 
-\paragraph{Efficiency}
+\subsection{Efficiency}
 In a quick test run performed by the author, the popular JavaScript parser `acorn'
 took around three to five times as long to parse a large bundle of JavaScript code
 than to just tokenize the same code.
@@ -57,7 +57,7 @@ We can also expect the memory usage footprint of the formatter
 to be lower in comparison to an ordinary formatter,
 because we do not need to hold a large tree structure in the memory.
 
-\paragraph{Streaming}
+\subsection{Streaming}
 A non-parsing formatter could potentially be capable of writing the first line of output
 right after reading the first few tokens of input and continuing to write quite consistently
 as it progresses through the input code, because conceivable implementations would never
@@ -65,19 +65,21 @@ need to look at more than a section between two hard line breaking tokens at onc
 Implementing such a capability would be way more trivial than it is for
 formatters that parse the code first.
 
-\paragraph{Adaptability}
+\subsection{Adaptability}
 A formatter that only has to understand the lexical grammar of a language,
 but not its syntactic grammar, can be more easily adapted to format other languages,
 even if their syntax is vastly different.
 
-\subsection{Drawbacks}
-\paragraph{Consistency}
-On the other hand, it is clear that we will not be able to achieve the same degree of consistency
+\section{Drawbacks}
+These benefits, however, come at a cost.
+
+\subsection{Consistency}
+It is clear that we will not be able to achieve the same degree of consistency
 for some of the harder aspects of formatting
 when the abstract syntax of expressions is the same,
 but the concrete syntax differs.
 
-\paragraph{Power}
+\subsection{Power}
 We cannot trivially make significant changes --- such as removing parentheses as mentioned earlier ---
 to the code, because the lack of syntactic information renders us unable to easily judge whether
 \begin{itemize}
@@ -85,14 +87,14 @@ to the code, because the lack of syntactic information renders us unable to easi
   \item such a modification would actually increase the readability of the code
 \end{itemize}
 
-\paragraph{Flexibility}
+\subsection{Flexibility}
 Information about constructs in the code and about the greater picture is often unavailable and
 we have to deal with tight limitations on what we can safely change in the code without altering semantics.
 This means that we cannot always just pick a preferred formatting style that we want to produce,
 but instead have to accept compromises on the output style and focus on what we \textit{can} produce.
 Allowing for further user configuration options of the desired output format would be borderline inconceivable.
 
-\subsection{Uses}
+\section{Uses}
 This kind of formatter would not be suitable for some of the common use cases, including both
 formatters integrated into an IDE or editor that run automatically or on key press and
 formatters that provide a command-line interface (CLI) for use by developers.
