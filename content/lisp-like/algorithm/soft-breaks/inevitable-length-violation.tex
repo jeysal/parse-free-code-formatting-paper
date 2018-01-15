@@ -3,10 +3,9 @@ Excessive expression nesting leading to deep indentation
 that consumes most of the available columns
 or simply the occurence of overly large tokens
 can force us to violate the restrictions on maximum line length.
-There is no way to place soft line breaks so
-the following code does not exceed the line length limit,
-including breaking at every single possible position,
-even if we ignore the separation avoidance we just introduced:
+Even if we ignore the separation avoidance mechanism we just introduced,
+there is no way, including breaking at every single possible position,
+to place soft line breaks so the following code does not exceed the line length limit:
 \begin{minted}{lisp}
   ; limit -|
   (

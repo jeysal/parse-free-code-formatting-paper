@@ -20,12 +20,11 @@ results in the code output:
 \begin{minted}{lisp}
   (a ('b c))
 \end{minted}
-
-It also works for a prefix preceding a list:
+It also works for a prefix preceding a list, printing the tokens
 \begin{minted}{text}
   (, a, ', (, b, c, ), )
 \end{minted}
-is printed as:
+as
 \begin{minted}{lisp}
   (a '(b c))
 \end{minted}
