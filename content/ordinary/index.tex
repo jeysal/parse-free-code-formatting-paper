@@ -135,11 +135,15 @@ In the aforementioned example, the assignment inside of the consequent block of 
 has its indentation level increased by one, relative to the lines immediately above and below
 that are not entirely contained inside the block statement.
 
-% TODO example
-
 \subsection{Hard line breaks}
 \textit{Hard line breaks} force the insertion of a line break between two tokens.
-We want this to happen in the obvious positions after an opening brace or semicolon and before a closing brace.
+We want this to happen in the obvious positions
+after an opening brace, closing brace or semicolon
+as well as before a closing brace.
+The if statement example code given earlier has been populated with hard line breaks
+after the opening brace, before the closing brace and furthermore
+after the closing brace at the end of the example code.
+
 Depending on our desired format we also want to use hard line breaks in some less obvious situtations.
 For example, it might be useful to apply them before switch cases in order to reformat
 \begin{minted}{c}
