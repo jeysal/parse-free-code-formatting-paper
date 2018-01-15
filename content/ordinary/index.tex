@@ -203,10 +203,13 @@ which can be especially handy if the language allows us to place the trailing co
 This concern is arguably the most complex aspect and has been subject to a substantial amount of research in the past.
 \autocite{designPrettyPrintingLib}\autocite{prettierPrinter}
 
-\bigbreak{}
-Different formatters also preserve the original shape of the source code to a varying degree.
-For example, it might be desirable to print empty lines
+\vspace{1cm} \paragraph{Shape retention}
+With regard to all four concerns,
+different formatters may choose to preserve
+the original shape of the source code to a varying degree.
+For example, it can be helpful to print empty lines
 exactly in those places where the original source code contained them,
 \autocite[Section: Empty lines]{prettierRationale}
-because these empty lines usually function as separators between logically coherent sections of the code,
-which cannot possibly be guessed from the tree structure by the printer.
+because these empty lines usually function as
+separators between logically coherent sections of the code,
+which the printer cannot possibly guess from the tree structure.
