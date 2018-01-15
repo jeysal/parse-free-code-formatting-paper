@@ -102,7 +102,7 @@ a printer might return the code string:
 \end{minted}
 
 Above example shows the first three of the four main concerns of the printing step in a code formatter,
-which we will discuss in the following.
+which we will all discuss in the following.
 
 \subsection{Spacing}
 \textit{Spacing} is necessary because we want to see gaps for instance
@@ -132,7 +132,7 @@ that is followed immediately by an identifier (\code{toString}).
 among other nestable structures, in the source code more easily.
 We want to increase the indentation level at the start of a block statement and decrease it at the end.
 In the aforementioned example, the assignment inside of the consequent block of the if statement
-has its indentation level increased by one relative to the lines immediately above and below
+has its indentation level increased by one, relative to the lines immediately above and below
 that are not entirely contained inside the block statement.
 
 % TODO example
@@ -157,11 +157,11 @@ to
   }
 \end{minted}
 
-\bigbreak{}
+\subsection{Soft line breaks}
 The fourth aspect that was missing in the given example is necessary
 because our output devices can only display characters in a row up to their finite width and
 because we can only comfortably read lines up to a finite length.
-\subsection{Soft line breaks}
+
 \textit{Soft line breaks} are used in places where the formatter is allowed to break
 if it helps avoid exceeding the given maximum allowed line length.
 Most lines of code will contain more than one soft line break and usually more soft line breaks
