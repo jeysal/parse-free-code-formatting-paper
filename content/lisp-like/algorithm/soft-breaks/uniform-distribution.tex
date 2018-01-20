@@ -1,0 +1,55 @@
+\paragraph{Uniform length distribution}
+There is still one strategy for placing soft line breaks that we disregarded so far:
+Distributing the tokens so each partial line is about the same in size.
+There are multiple ways to implement this strategy.
+Unfortunately, none of them is computationally quite as trivial
+as the greedy line-filling algorithm we discussed before ---
+going through the tokens left to right once will not suffice here.
+For a solution that is still quite fast and simple,
+we can split a line that is too long between its two most central tokens.
+For example, the 21-characters long (after spacing) line
+\begin{minted}{lisp}
+  (a bc def ghij klmno)
+\end{minted}
+would be split into
+\begin{minted}{lisp}
+  (a bc def
+  ghij klmno)
+\end{minted}
+, with the partial lines being 9 and 11 characters long (before indentation).
+We then need to recalculate the indentation for the part after the split.
+Taking the indentation into account, we determine for both parts whether they
+still exceed the length limit, and for each one that does, repeat the split recursively.
+
+Just like with greedy line-filling, we can treat tokens without a space between them
+as one token to avoid undesired separation of them.
+Inevitable length limit violations are not as easy to deal with,
+because by the time we detect such an offense, we are at a leaf of the recursion tree.
+We could extend the algorithm to give feedback on
+how many columns of horizontal space a partial line ended up using,
+so further invocations know that they can use that extra space.
+
+Note that this algorithm is not optimal in distributing the length uniformly.
+Consider the tokens:
+\begin{minted}{text}
+  (, aaa, b, c, dd, )
+\end{minted}
+Given line size 6, our algorithm would insert a soft line break between
+\code{b} and \code{c}, and then between \code{c} and \code{dd},
+producing the code
+\begin{minted}{lisp}
+  (aaa b
+    c
+    dd)
+\end{minted}
+as opposed to the optimal length distribution:
+\begin{minted}{lisp}
+  (aaa
+    b c
+    dd)
+\end{minted}
+
+It may prove useful to pick a slightly higher ratio than 50\% to split at.
+This is because practical lisp code tends to have higher levels of nesting
+towards the end of an expression, so we can expect the code after the split
+to have more indentation whitespace that occupies some extra columns.
