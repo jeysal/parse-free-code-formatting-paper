@@ -1,0 +1,100 @@
+\subsection{Aligning indentation style}
+
+When discussing our method for indenting code in this Lisp-like language,
+we noticed that the example code for an implementation of the factorial function
+used two different styles of indentation.
+\input{content/lisp-like/factorial-example.tex}
+The middle line is indented according to the depth of expression nesting
+and matches the indentation that our algorithm would have assigned to the line.
+The last line, however, is indented with six spaces instead of the four
+we would expect if the same indentation style had been used.
+
+This alternative indentation style uses the column where the
+second element of a list started as a baseline for any further elements
+that are part of the same list and need to be assigned an indentation level.
+The following example uses this style consistently,
+albeit containing strangely placed line breaks that cause the weird appearance:
+\begin{minted}{lisp}
+  (a b c
+     d (e f
+          g) (h i
+                j (k l
+                     m)
+                n)
+     o)
+\end{minted}
+Using spaces for indentation is mandatory with this style,
+since tabs cannot provide sufficiently granular control to achieve exact alignment.
+
+To implement this method of indentation, we can use a stack (\textit{LIFO}) data structure
+containing numeric values that describe the indentation level per nesting level.
+\begin{itemize}
+  \item When printing a \code{leftPar}, we push a 0 onto the stack.
+  \item When printing a token after a space and the stack holds a 0,
+  we replace the 0 with the column where the token starts.
+  \item When printing a \code{rightPar}, we pop a number off the stack.
+\end{itemize}
+Whenever we need to look up the indentation level required for the current position,
+we can just look it up on top of the stack.
+
+This is the example from above, annotated at each line break
+with the current stack values as zero-based column indices:
+\begin{minted}{lisp}
+  ;()
+  (a b c
+  ;(3)
+     d (e f
+  ;(3, 8)
+          g) (h i
+  ;(3, 14)
+                j (k l
+  ;(3, 14, 19)
+                     m)
+  ;(3, 14)
+                n)
+  ;(3)
+     o)
+  ;()
+\end{minted}
+
+\paragraph{Early line breaks}
+It is possible that we need to provide an indentation level
+before encountering the second element of the current list,
+when the stack still contains a zero at the top.
+This could happen if there is a line break immediately after the
+\code{leftPar} and the first identifier:
+\begin{minted}{lisp}
+  (aaa
+  b c) ; how to indent this line?
+\end{minted}
+It is even more likely to occur if the first expression
+is more complex than a single identifier:
+\begin{minted}{lisp}
+  ((a1 a2 a3
+       a4 a5)
+  b c) ; how to indent this line?
+\end{minted}
+There are multiple reasonable options to handle this case, including
+\begin{itemize}
+  \item using the indentation level from the previous nesting level, plus an offset, and
+  \item aligning with the \textit{first} element of the list instead.
+\end{itemize}
+
+\paragraph{Escalating indentation}
+It might also be a good idea to use this indentation style only if
+the indentation level does not jump up more than a certain threshold,
+and fall back to the nesting-based style otherwise.
+The pure form of this indentation method can
+provoke extremely deep indentation very quickly:
+\begin{minted}{lisp}
+  (firstElementIsVeryLong second
+                          ((first element is complex) second
+                                                      third))
+\end{minted}
+It is also dangerous when paired with certain soft line breaking algorithms,
+such as the greedy line-filling method we defined:
+\begin{minted}{lisp}
+  ; line size 20
+  (aaaa (bbbb cccc
+              dddd))
+\end{minted}
