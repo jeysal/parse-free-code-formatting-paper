@@ -1,6 +1,29 @@
 \chapter{Implementing a formatter}
-
+In this chapter, we will use the insight into formatting rules for our Lisp-like syntax that we gained
+and the concrete algorithms we developed to implement a complete formatter that can transform
+input code adhering to the syntax, regardless of its formatting, to
+equivalent output code that fulfills our code formatting requirements.
 % TODO we'll write this in JS
-% no point in using e.g. ANTLR, because we need no parser and the lexer is pretty trivial
-% describe implementation with code snippets
-% code examples both from earlier in the paper and from external lisp code
+% TODO we need a lexer and a printer
+
+\section{Lexing}
+% TODO no parsing, but we still need to tokenize the input code
+% TODO no point in using e.g. ANTLR, because we need no parser and the lexer is pretty trivial
+% TODO gradually build up with code snippets
+% TODO include comments extension
+
+\section{Printing}
+% TODO
+
+\subsection{Spacing}
+% TODO standard spacing conditions that we already defined
+
+\subsection{Hard line breaks}
+% TODO standard hard line break rules
+
+\subsection{Soft line breaks and indentation}
+% TODO regular indentation, not the aligning extension
+% TODO greedy line breaks with separation avoidance and inevitable length violation recovery
+
+\section{Formatting examples}
+% TODO code examples both from earlier in the paper and from external lisp code
