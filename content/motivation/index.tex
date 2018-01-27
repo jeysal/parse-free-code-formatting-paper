@@ -14,6 +14,22 @@ now include formatting tools in their core distributions together with
 Git version control integration, syntax highlighting and other tooling that is deemed essential,
 disposing the need to install an additional plugin that provides code formatting support.
 
+These formatters usually work by lexing and parsing the input code
+in a process similar to the one a compiler for the same language would utilize,
+but then instead of proceeding to transform or semantically analyze the generated syntax tree,
+they use the syntactic information obtained by parsing
+to print out the token stream obtained by lexing
+in a defined format that humans consider readable and comprehensible,
+optionally preserving the shape of the original code to some degree.
+
+We introduce a procedure that skips the parsing step and
+build a formatter that can move on from the lexing step straight to printing.
+While this procedure will generate less information about the code we are operating on and
+thus necessarily limit our capability to generate code
+formatted in a consistent and customizable output format,
+our formatter will become quite easy to adapt to vastly different languages and
+we can potentially achieve higher formatting performance with increased code throughput.
+
 In the following chapter, we will roughly outline how code formatters typically work.
 Once we have established fundamental comprehension of their technical background,
 we can then move on to propose an alternative method that relinquishes parsing.
