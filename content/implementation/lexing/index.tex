@@ -10,12 +10,12 @@ a lexer will be sufficiently trivial to implement ourselves.
 
 The lexer function has the signature
 \begin{minted}{typescript}
-(code: string) => {
-  type: 'leftPar' | 'rightPar' | 'operator' | 'prefix' |
-    'numLiteral' | 'boolLiteral' | 'keyword' | 'identifier' |
-    'lineComment' | 'blockComment',
-  value: string,
-}[]
+  (code: string) => {
+    type: 'leftPar' | 'rightPar' | 'operator' | 'prefix' |
+      'numLiteral' | 'boolLiteral' | 'keyword' | 'identifier' |
+      'lineComment' | 'blockComment',
+    value: string,
+  }[]
 \end{minted}
 , taking the input code as a string and returning an array of
 token objects with a property \code{type} from a fixed pool of

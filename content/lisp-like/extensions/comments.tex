@@ -9,12 +9,12 @@ identifiers, prefixes, \code{leftPar}s and other token types.
 For line comments (\code{;}), we must place a hard line break behind them,
 so we do not risk reformatting
 \begin{minted}{lisp}
-(a ; comment
-b)
+  (a ; comment
+  b)
 \end{minted}
 to
 \begin{minted}{lisp}
-(a ; comment b)
+  (a ; comment b)
 \end{minted}
 , modifying the program syntax and in this case making it invalid.
 Block comments (\code{#| |#}) do not carry this risk.
@@ -23,23 +23,23 @@ Spaces around comments, as well as potential soft breaks, are desired.
 Using these rules, we can output comments in a variety of ways
 depending on the context they appear in, for both line comments:
 \begin{minted}{lisp}
-(a b) ; at the end of a line
+  (a b) ; at the end of a line
 
-(a b cdefghijklmnopqrstuvwxyz)
-; on their own after a used soft line break
+  (a b cdefghijklmnopqrstuvwxyz)
+  ; on their own after a used soft line break
 \end{minted}
 , and block comments:
 \begin{minted}{lisp}
-(a b c
-#| at the beginning of a line |# d e)
+  (a b c
+  #| at the beginning of a line |# d e)
 
-(a b c #| or right in the middle |# d e)
+  (a b c #| or right in the middle |# d e)
 
-(a b c
-#| spanning
-multiple
-lines |#
-d e)
+  (a b c
+  #| spanning
+  multiple
+  lines |#
+  d e)
 \end{minted}
 
 We can convert line breaks inside block comments to hard line breaks
@@ -49,9 +49,9 @@ and only the last keeps the terminating comment delimiter \code{|#}.
 This has the effect that our printer understands that the comment
 is not entirely on one line, and it might in the multi-line example above print
 \begin{minted}{lisp}
-(a b c #| spanning
-multiple
-lines |# d e)
+  (a b c #| spanning
+  multiple
+  lines |# d e)
 \end{minted}
 instead, using some more of the available space
 on the first and last lines of the block comment for the remaining tokens.
@@ -63,18 +63,21 @@ consequently, the indentation was zero.
 With hard line breaks from block comments appearing in the middle of expressions,
 we can profit from the existing indentation algorithm to align comments appropriately:
 \begin{minted}{lisp}
-(a (b (c (d (e (f (g
-            h #| multi
-            line
-            comment |# )))))))
+  (a (b (c (d (e (f (g
+              h #| multi
+              line
+              comment |# )))))))
 \end{minted}
 looks a lot better than:
 \begin{minted}{lisp}
-(a (b (c (d (e (f (g
-            h #| multi
-line
-comment |# )))))))
+  (a (b (c (d (e (f (g
+              h #| multi
+  line
+  comment |# )))))))
 \end{minted}
 
-
-% TODO possible to do fancy stuff, but out of scope
+% TODO possible to do fancy stuff like
+% indenting text inside comments or
+% inserting soft line breaks inside block comments or
+% converting line comments to block comments,
+% but out of scope for this paper
