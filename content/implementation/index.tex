@@ -3,14 +3,10 @@ In this chapter, we will use the insight into formatting rules for our Lisp-like
 and the concrete algorithms we developed to implement a complete formatter that can transform
 input code adhering to the syntax, regardless of its formatting, to
 equivalent output code that fulfills our code formatting requirements.
-% TODO we'll write this in JS
-% TODO we need a lexer and a printer
+We will write the formatter in JavaScript, compliant with ECMAScript 2018,
+as two strictly separated functions that realize the lexing and printing steps.
 
-\section{Lexing}
-% TODO no parsing, but we still need to tokenize the input code
-% TODO no point in using e.g. ANTLR, because we need no parser and the lexer is pretty trivial
-% TODO gradually build up with code snippets
-% TODO include comments extension
+\input{content/implementation/lexing/index.tex}
 
 \section{Printing}
 % TODO
@@ -21,7 +17,7 @@ equivalent output code that fulfills our code formatting requirements.
 \subsection{Hard line breaks}
 % TODO standard hard line break rules
 
-\subsection{Soft line breaks and indentation}
+\subsection{Soft line breaks \& indentation}
 % TODO regular indentation, not the aligning extension
 % TODO greedy line breaks with separation avoidance and inevitable length violation recovery
 

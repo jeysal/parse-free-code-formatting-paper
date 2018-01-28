@@ -1,0 +1,48 @@
+\section{Lexing}
+Our formatter is built to do without parsing any code,
+but we still need to split the input code into individual tokens.
+Therefore, we will start by creating a lexer that can recognize
+all the token types we defined for our lisp-like language,
+including line and block comments from the comments extension.
+We could use a parser generator such as ANTLR to generate a lexer only,
+but due to the simple nature of our language,
+a lexer will be sufficiently trivial to implement ourselves.
+
+The lexer function has the signature
+\begin{minted}{typescript}
+(code: string) => {
+  type: 'leftPar' | 'rightPar' | 'operator' | 'prefix' |
+    'numLiteral' | 'boolLiteral' | 'keyword' | 'identifier' |
+    'lineComment' | 'blockComment',
+  value: string,
+}[]
+\end{minted}
+, taking the input code as a string and returning an array of
+token objects with a property \code{type} from a fixed pool of
+strings that contains a type identifier
+for each possible token that can occur in the code,
+and a a property \code{value} that contains the
+snippet from the input code that represents the corresponding token.
+The token types are exactly those we defined in the language grammar,
+plus \code{'lineComment'} and \code{'blockComment'}
+for representing the comments we defined as an extension to the language,
+which have no effect on the code semantics,
+but are treated like any other token for the purpose of formatting.
+
+\input{content/implementation/lexing/examples.tex}
+
+\input{content/implementation/lexing/structure.tex}
+
+\input{content/implementation/lexing/whitespace.tex}
+
+\input{content/implementation/lexing/parentheses.tex}
+
+\input{content/implementation/lexing/operators-prefixes.tex}
+
+\input{content/implementation/lexing/numbers.tex}
+
+\input{content/implementation/lexing/identifiers-keywords-booleans.tex}
+
+\input{content/implementation/lexing/line-comments.tex}
+
+\input{content/implementation/lexing/block-comments.tex}
