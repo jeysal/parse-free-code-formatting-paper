@@ -1,3 +1,73 @@
 \subsection{Examples}
+The following example input code strings and corresponding expected output token arrays
+demonstrate the intended functionality that the lexer function should provide
+and can be used as test cases to verify that a lexer implementation works as expected.
 
-% TODO lexer test cases
+\paragraph{Regular token types}
+The lexer recognizes the regular token types
+as defined by the language grammar
+and ignores whitespace inbetween them:
+\begin{minted}{lisp}
+  (lambda id1 &id2
+    (= true 123))
+\end{minted}
+is tokenized to:
+\begin{minted}{javascript}
+  [
+    { type: 'leftPar', value: '(' },
+    { type: 'keyword', value: 'lambda' },
+    { type: 'identifier', value: 'id1' },
+    { type: 'prefix', value: '&' },
+    { type: 'identifier', value: 'id2' },
+    { type: 'leftPar', value: '(' },
+    { type: 'operator', value: '=' },
+    { type: 'boolLiteral', value: 'true' },
+    { type: 'numLiteral', value: '123' },
+    { type: 'rightPar', value: ')' },
+    { type: 'rightPar', value: ')' },
+  ]
+\end{minted}
+
+\paragraph{Line comments}
+The lexer recognizes line comments
+as used in the comments extension:
+\begin{minted}{lisp}
+  (a ;comment
+  b)
+\end{minted}
+is tokenized to:
+\begin{minted}{javascript}
+  [
+    { type: 'leftPar', value: '(' },
+    { type: 'identifier', value: 'a' },
+    { type: 'lineComment', value: ';comment' },
+    { type: 'identifier', value: 'b' },
+    { type: 'rightPar', value: ')' },
+  ]
+\end{minted}
+
+\paragraph{Block comments}
+The lexer recognizes block comments
+as used in the comments extension:
+\begin{minted}{lisp}
+  (a #|com
+  ment|# b)
+\end{minted}
+is tokenized to:
+\begin{minted}{javascript}
+  [
+    { type: 'leftPar', value: '(' },
+    { type: 'identifier', value: 'a' },
+    { type: 'blockComment', value: '#|com\nment|#' },
+    { type: 'identifier', value: 'b' },
+    { type: 'rightPar', value: ')' },
+  ]
+\end{minted}
+
+\paragraph{Illegal characters}
+The lexer throws an error
+if the code includes an illegal character:
+\begin{minted}{text}
+  (a # b)
+\end{minted}
+results in a lexer error.
