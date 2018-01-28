@@ -1,4 +1,27 @@
 \subsection{Structure}
+The lexer function holds two essential values:
+\begin{itemize}
+  \item the current position in the source code: \mintinline{javascript}{let position = 0;}
+  \item a mutable array of the tokens recognized so far: \mintinline{javascript}{const tokens = [];}
+\end{itemize}
+The return value in the success case is the \code{tokens} array.
 
-% TODO function, vars
-% TODO while loop, error case
+The backbone of the lexing process is formed by the loop:
+\begin{minted}{javascript}
+  while (position < code.length) {
+    let char = code[position];
+
+    // ... token detection here ...
+
+    throw new Error(
+      `unexpected character ${char} at position ${position}`);
+  }
+\end{minted}
+It runs until the position cursor reaches the end of the input code
+and reads the current character into the \code{char} variable in every iteration.
+We can then insert arbitrary token detection code that pushes new tokens to the \code{tokens} array
+into the loop where the placeholder comment is positioned.
+This code is also responsible for advancing the \code{position} cursor
+and triggering the next iteration using \code{continue;} after doing its work.
+If the token detection code did not successfully match a token,
+we have found an illegal character in the source code and throw an error.
