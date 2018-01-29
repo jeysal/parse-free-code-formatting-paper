@@ -1,3 +1,60 @@
 \subsection{Number literals}
+Number literals are a little more complex to recognize,
+because they are the first token so far to have variable length.
 
-% TODO detect number literals
+Initial detection is simple using the a regex that matches digits:
+\begin{minted}{javascript}
+  const numRegex = /[0-9]/;
+
+  if (numRegex.test(char)) {
+    // ...
+  }
+\end{minted}
+
+But after the initial digit, the number literal may contain further digits.
+We use a loop to collect them in a string,
+running until we find a character that is not a digit:
+\begin{minted}{javascript}
+  let numberLiteral = '';
+
+  do {
+    numberLiteral += char;
+    char = code[++position];
+  } while (numRegex.test(char));
+\end{minted}
+
+Afterwards, we can push the token as usual,
+with the value set to the string of accumulated digits:
+\begin{minted}{javascript}
+  tokens.push({ type: 'numLiteral', value: numberLiteral });
+  continue;
+\end{minted}
+The \code{position} cursor has already been advanced
+beyond the number literal in the last iteration of the loop,
+so we do not need to increment it like we did in the other blocks.
+
+This also implies that the lexer will accept any token
+immediately after the number literal --- the code
+\begin{minted}{lisp}
+  (123abc)
+\end{minted}
+would be tokenized into the number literal \code{123}
+and, by a rule we have yet to implement, the identifier \code{abc}.
+The language might not allow this pattern to occur in the code
+without any separating whitespace, so we may accept code that is not valid ---
+and in this concrete case later reformat it to valid code that
+conforms to what was likely the intended code in the first place:
+\begin{minted}{lisp}
+  (123 abc)
+\end{minted}
+
+In any case, accepting a superset of code that is actually valid
+by the rules of the language is not something we can avoid,
+because the lack of parsing means that
+we can only check the validity of the input
+according to the lexical grammar,
+but not according to the syntactic grammar.
+We can tolerate these instances of reformatting code that is invalid,
+because our printing algorithm will never introduce significant changes
+that destroy the code further and it will recover a well-formatted state
+after the user fixes the code error and reformats once again.
