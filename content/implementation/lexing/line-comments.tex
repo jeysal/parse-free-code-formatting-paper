@@ -1,3 +1,20 @@
 \subsection{Line comments}
+For detecting line comments, we use the regular loop structure.
+The initial detection checks for the semicolon character:
+\begin{minted}{javascript}
+  if (char === ';') {
+    // ...
+  }
+\end{minted}
 
-% TODO detect line comments
+The loop runs until the end of the line by checking for line breaks:
+\begin{minted}{javascript}
+  do {
+    // ...
+  } while (char !== '\n');
+\end{minted}
+Line break characters may vary depending by operating system,
+but we will assume \code{\n} for the sake of simplicity
+and stay focused on the actual formatting algorithms.
+
+After the loop, we push a token as usual and continue with the main loop.
