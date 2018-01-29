@@ -1,3 +1,13 @@
 \subsection{Parentheses}
+Parentheses are single-character tokens that can have exactly one value ---
+\code{(} for \code{leftPar}s and \code{)} for \code{rightPar}s.
 
-% TODO detect parentheses
+We push a new token whenever we detect one of them with
+\begin{minted}{javascript}
+  if (char === '(') {
+    tokens.push({ type: 'leftPar', value: char });
+    position++;
+    continue;
+  }
+\end{minted}
+and the equivalent for \code{rightPar}s afterwards.
