@@ -1,3 +1,37 @@
 \subsection{Identifiers, keywords \& boolean literals}
+Identifiers, keywords and boolean literals require
+the same loop structure as number literals.
+Instead of testing with the \code{numRegex}, we test with
+\begin{minted}{javascript}
+  const alphaRegex = /[a-zA-Z]/;
+\end{minted}
+for the first character in the if statement, and
+\begin{minted}{javascript}
+  const alphaNumRegex = /[a-zA-Z0-9]/;
+\end{minted}
+for the remaining characters in the do-while statement and store them all in
+\begin{minted}{javascript}
+  let name = '';
+\end{minted}
 
-% TODO detect identifiers, keywords & boolean literals
+Only once the loop has completed,
+we can use the knowledge about all keywords and boolean literals that exist
+\begin{minted}{javascript}
+  const booleans = ['true', 'false'];
+  const keywords = ['quote', 'lambda', 'defun',
+                    'let', 'if', 'and', 'or'];
+\end{minted}
+to determine whether the token we found belongs to one of those categories
+or whether it is an identifier:
+\begin{minted}{javascript}
+  let type;
+  if (booleans.includes(name)) type = 'boolLiteral';
+  else if (keywords.includes(name)) type = 'keyword';
+  else type = 'identifier';
+\end{minted}
+
+Finally, we can push a token with the type we determined for the token:
+\begin{minted}{javascript}
+  tokens.push({ type, value: name });
+  continue;
+\end{minted}
