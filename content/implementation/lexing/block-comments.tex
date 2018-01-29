@@ -1,3 +1,40 @@
 \subsection{Block comments}
+The final block of code for lexing detects block comments.
+Those are delimited by two characters (\code{#| ... |#}),
+so we perform two checks before entering the loop:
+\begin{minted}{javascript}
+  if (char === '#') {
+    let commentChar = code[++position];
+    if (commentChar === '|') {
+      // ...
+    }
+  }
+\end{minted}
+If the inner check fails, we will fall through to the throw statement
+at the bottom of the lexer main loop and report that
+the character after the \code{#} is invalid.
 
-% TODO detect block comments
+If both conditions are truthy, we have detected a block comment.
+We initialize the variable to store its text
+with the character \code{#} instead of an empty string,
+because we have already advanced the cursor beyond its occurrence in the code,
+so the loop will start at the pipe character (\code{|}):
+\begin{minted}{javascript}
+  let text = '#';
+\end{minted}
+
+The exit condition for the loop is the detection
+of the block comment terminator (\code{|#}),
+which will be the last bit of code included in the text of the token:
+\begin{minted}{javascript}
+  do {
+    text += commentChar;
+    commentChar = code[++position];
+  } while (!text.endsWith('|#'));
+\end{minted}
+
+The block ends by pushing a new token and continuing the main loop:
+\begin{minted}{javascript}
+  tokens.push({ type: 'blockComment', value: text });
+  continue;
+\end{minted}
