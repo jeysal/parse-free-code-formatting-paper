@@ -1,3 +1,19 @@
 \subsection{Whitespace}
+Whitespace primarily includes spaces, tabs, line feeds and carriage returns,
+all of which are characters which will not be included in any token
+but may serve as separators between tokens,
+for example two identifiers that would be treated as one
+if there were no whitespace between them.
 
-% TODO skip whitespace
+It can be matched with the regular expression:
+\begin{minted}{javascript}
+  const whitespaceRegex = /\s/;
+\end{minted}
+
+We use that regular expression to skip all of it:
+\begin{minted}{javascript}
+  if (whitespaceRegex.test(char)) {
+    position++;
+    continue;
+  }
+\end{minted}
