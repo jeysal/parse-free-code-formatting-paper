@@ -1,3 +1,20 @@
 \subsection{Operators \& prefixes}
+Operators are single-character tokens consisting of one of the characters:
+\begin{minted}{javascript}
+  const operators = ['=', '+', '-', '*', '/'];
+\end{minted}
 
-% TODO detect operators & prefixes
+If the current character is one of those in the \code{operators} array,
+we push a new token of type \code{operator}:
+\begin{minted}{javascript}
+  if (operators.includes(char)) {
+    tokens.push({ type: 'operator', value: char });
+    position++;
+    continue;
+  }
+\end{minted}
+
+For prefixes, we do the same based on the characters:
+\begin{minted}{javascript}
+  const prefixes = ["'", '&'];
+\end{minted}
