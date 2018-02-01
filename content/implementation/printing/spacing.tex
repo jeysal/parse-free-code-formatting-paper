@@ -1,2 +1,65 @@
 \subsection{Spacing}
-% TODO standard spacing conditions that we already defined
+We have established the convention that tokens should
+always be separated by a space (or line break) \textit{unless}
+\begin{itemize}
+  \item the former of them is of type \code{leftPar},
+  \item the former of them is of type \code{prefix} or
+  \item the latter of them is of type \code{rightPar}.
+\end{itemize}
+
+To implement space separation
+according to these rules in our parser,
+we can choose to either
+\begin{itemize}
+  \item print a space before the current token
+    if it is not a \code{rightPar}
+    and we have memorized the previous token not to be
+    a \code{leftPar} or \code{prefix}, or to
+  \item print a space after the current token
+    if it is not a \code{leftPar} or \code{prefix}
+    and a lookahead reveals the next token not to be
+    a \code{rightPar}.
+\end{itemize}
+We choose the first option,
+as a lookahead would be less intuitive to implement
+given our printer structure.
+
+\paragraph{Current token constraint}
+In the \code{PRE_PRINT} position,
+we conditionally print a space,
+depending on whether the current token is a \code{rightPar}:
+\begin{minted}{javascript}
+  if (allowsSpaceBefore(type)) code += ' ';
+\end{minted}
+with \code{allowsSpaceBefore} defined as:
+\begin{minted}{javascript}
+  const allowsSpaceBefore = type => type !== 'rightPar';
+\end{minted}
+This ensures that a we do not print a space before a closing parenthesis.
+
+\paragraph{Previous token constraint}
+To prevent printing a space after an opening parenthesis or a prefix,
+we have to hold state that tells us
+whether the previous token allows a space behind it
+across iterations of the token loop:
+\begin{minted}{javascript}
+  let prevAllowsSpace = false;
+\end{minted}
+We initialize this variable to \code{false}
+because we do not want a space
+right at the beginning of the source code.
+
+At \code{POST_PRINT}, we update the variable based on the current token,
+which will be the previous token in the next iteration:
+\begin{minted}{javascript}
+  prevAllowsSpace = allowsSpaceAfter(type);
+\end{minted}
+with \code{allowsSpaceAfter} defined as:
+\begin{minted}{javascript}
+  const allowsSpaceAfter = type => !['leftPar', 'prefix'].includes(type);
+\end{minted}
+We amend the conditional space printing statement
+to also respect this constraint:
+\begin{minted}{javascript}
+  if (prevAllowsSpace && allowsSpaceBefore(type)) code += ' ';
+\end{minted}
