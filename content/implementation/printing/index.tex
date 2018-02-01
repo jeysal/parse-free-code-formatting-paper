@@ -1,5 +1,45 @@
 \section{Printing}
-% TODO
+Once our lexer has tokenized the input code,
+we pass the array of tokens it generated into the printer.
+The printer will then generate well-formatted output code from those tokens.
+Its signature is the inverse of the lexer:
+\begin{minted}{typescript}
+  (tokens: {
+    type: 'leftPar' | 'rightPar' | 'operator' | 'prefix' |
+      'numLiteral' | 'boolLiteral' | 'keyword' | 'identifier' |
+      'lineComment' | 'blockComment',
+    value: string,
+  }[]) => string
+\end{minted}
+
+The high-level structure of the printer function is as follows:
+\begin{minted}{javascript}
+  const print = tokens => {
+    let code = '';
+    // GLOBAL_STATE ...
+
+    for (const { type, value } of tokens) {
+      // PRE_PRINT ...
+
+      // print token
+      code += value;
+
+      // POST_PRINT ...
+    }
+
+    return code;
+  };
+\end{minted}
+The printer iterates over all input tokens
+and prints them to the output code.
+Outside of that loop, it holds some global state,
+most notably the output code generated so far.
+As we gradually implement
+more functionality for the aspects of printing
+over the course of this section,
+we will add more state variables
+as well as computations and further printing
+before and after a token is printed in the loop.
 
 \input{content/implementation/printing/spacing.tex}
 
