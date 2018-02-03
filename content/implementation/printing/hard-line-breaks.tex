@@ -1,2 +1,38 @@
 \subsection{Hard line breaks}
-% TODO standard hard line break rules
+We need to insert a hard line break
+whenever a \code{rightPar} decreases the
+current level of nesting to zero.
+We track the level of nesting with another
+state variable declared outside of the printer loop:
+\begin{minted}{javascript}
+  let nestingLevel = 0;
+\end{minted}
+
+In the \code{POST_PRINT} position,
+after the assignment of \code{prevAllowsSpace},
+we track changes to the nesting level and
+increment it after a \code{leftPar}:
+\begin{minted}{javascript}
+  if (type === 'leftPar') nestingLevel++;
+\end{minted}
+
+For \code{rightPar}s, we need to
+not only decrement the nesting level,
+but also print a line break if
+it has reached zero because of the decrement.
+This line break must also effect our spacing,
+making sure that no space is printed
+in addition to the line break
+in the next loop iteration.
+We achieve this with the following code:
+\begin{minted}{javascript}
+  if (type === 'rightPar') {
+    if (--nestingLevel === 0) {
+      code += '\n';
+      prevAllowsSpace = false; // line break replaces space
+    }
+  }
+\end{minted}
+
+\paragraph{Preservation of empty lines}
+% TODO additions to printer that preserve empty lines
