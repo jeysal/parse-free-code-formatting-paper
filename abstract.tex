@@ -1,5 +1,18 @@
 \begin{abstract}
   \addcontentsline{toc}{chapter}{Abstract}
 
-  {\large\textbf{Abstract}\par} TODO
+  {\noindent\large\textbf{Abstract}\par}\noindent
+  We propose an approach to code formatting
+  based entirely on lexical analysis of the input code,
+  disposing the need for expensive syntactic analysis.
+  This approach has the potential to
+  improve the resource efficiency of a formatter
+  and make it easily adaptable to different languages,
+  while sacrificing consistency and beauty
+  of the output format to some degree.
+  We develop a parse-free algorithm that handles
+  all essential aspects of code formatting
+  for a simple Lisp-like language.
+  We implement a lexer and a printer
+  adhering to this algorithm.
 \end{abstract}
