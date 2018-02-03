@@ -35,4 +35,62 @@ We achieve this with the following code:
 \end{minted}
 
 \paragraph{Preservation of empty lines}
-% TODO additions to printer that preserve empty lines
+When discussing the hard line breaks for our Lisp-like language,
+we also noticed that it is important
+to preserve empty lines that were present in the input code,
+because the author of the code will have inserted those
+to aid reader comprehension of the code structure.
+We have built functionality in our lexer specifically
+to insert tokens where empty lines occur;
+now we need to adapt the printer to use those tokens
+in order to generate empty lines again.
+
+An empty line can be inserted by
+printing two consecutive line break characters.
+To keep track of how many of those we have printed
+we introduce another state variable:
+\begin{minted}{javascript}
+  let consecutiveBreaks = 2;
+\end{minted}
+We will use this variable to ensure that we never print
+more than two consecutive line break characters,
+because we do not want
+more than one consecutive empty line
+in our output code.
+We initialize it with 2,
+pretending that we have already printed an empty line
+at the beginning of the code,
+because we do not want to print an actual empty line
+before a meaningful character at the start.
+
+When we encounter an \code{emptyLine} token in the printer loop,
+between the assignment of \code{prevAllowsSpace}
+and the parentheses handling,
+we count the variable \code{consecutiveBreaks} up to 2
+and print a line break for each increment:
+\begin{minted}{javascript}
+  if (type === 'emptyLine') {
+    while (consecutiveBreaks < 2) {
+      code += '\n';
+      consecutiveBreaks++;
+      prevAllowsSpace = false; // line break replaces space
+    }
+  }
+\end{minted}
+For any other token,
+we reset \code{consecutiveBreaks} to 0,
+because we know that we have stopped the series of line breaks
+by printing the value of the current token in this iteration:
+\begin{minted}{javascript}
+  if (type === 'emptyLine') {
+    // ...
+  } else {
+    consecutiveBreaks = 0;
+  }
+\end{minted}
+
+To avoid printing two empty lines if an \code{emptyLine} token
+occurs after a \code{rightPar} token
+that causes a regular hard break insertion,
+we also need to add the statement \code{consecutiveBreaks++;}
+in the code block where we print that kind of line break.
