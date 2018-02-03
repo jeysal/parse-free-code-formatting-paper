@@ -13,7 +13,7 @@ The lexer function has the signature
   (code: string) => {
     type: 'leftPar' | 'rightPar' | 'operator' | 'prefix' |
       'numLiteral' | 'boolLiteral' | 'keyword' | 'identifier' |
-      'lineComment' | 'blockComment',
+      'lineComment' | 'blockComment' | 'emptyLine',
     value: string,
   }[]
 \end{minted}
@@ -27,7 +27,9 @@ The token types are exactly those we defined in the language grammar,
 plus \code{'lineComment'} and \code{'blockComment'}
 for representing the comments we defined as an extension to the language,
 which have no effect on the code semantics,
-but are treated like any other token for the purpose of formatting.
+but are treated like any other token for the purpose of formatting,
+and \code{'emptyLine'} for preserving empty lines in the code,
+which we deemed essential to the hard breaking algorithm of a formatter.
 
 \input{content/implementation/lexing/examples.tex}
 

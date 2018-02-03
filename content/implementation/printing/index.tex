@@ -7,7 +7,7 @@ Its signature is the inverse of the lexer:
   (tokens: {
     type: 'leftPar' | 'rightPar' | 'operator' | 'prefix' |
       'numLiteral' | 'boolLiteral' | 'keyword' | 'identifier' |
-      'lineComment' | 'blockComment',
+      'lineComment' | 'blockComment' | 'emptyLine',
     value: string,
   }[]) => string
 \end{minted}
