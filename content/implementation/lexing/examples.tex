@@ -65,10 +65,29 @@ is tokenized to:
   ]
 \end{minted}
 
+\paragraph{Empty lines}
+The lexer inserts a token
+where the code contains an empty line:
+\begin{minted}{lisp}
+  (a
+
+  b)
+\end{minted}
+is tokenized to:
+\begin{minted}{javascript}
+  [
+    { type: 'leftPar', value: '(' },
+    { type: 'identifier', value: 'a' },
+    { type: 'emptyLine', value: '' },
+    { type: 'identifier', value: 'b' },
+    { type: 'rightPar', value: ')' },
+  ]
+\end{minted}
+
 \paragraph{Illegal characters}
 The lexer throws an error
 if the code includes an illegal character:
 \begin{minted}{text}
-  (a # b)
+  (a ~ b)
 \end{minted}
 results in a lexer error.
