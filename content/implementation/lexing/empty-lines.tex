@@ -1,0 +1,32 @@
+\subsection{Empty lines}
+To detect empty lines in the input code,
+we need to store an additional state variable
+across iterations of the loop,
+tracking the number of line breaks we have seen
+without a token in between:
+\begin{minted}{javascript}
+  let consecutiveBreaks = 0;
+\end{minted}
+We could alternatively initialize this variable to 1
+if we wanted to also respect an empty line
+right at the beginning of the code.
+
+We need to reset the variable to 0
+whenever we find a character
+that is not whitespace and will thus either
+generate a token or cause a lexer error.
+We accomplish this by inserting the statement
+\begin{minted}{javascript}
+  consecutiveBreaks = 0;
+\end{minted}
+\textit{below} the if statement that checks for whitespace.
+
+Finally, we increment the \code{consecutiveBreaks} counter
+and push an \code{emptyLine} token if it has reached 2
+by inserting the following code
+\textit{above} the if statement that checks for whitespace:
+\begin{minted}{javascript}
+  if (char === '\n')
+    if (++consecutiveBreaks === 2)
+      tokens.push({ type: 'emptyLine', value: '' });
+\end{minted}
