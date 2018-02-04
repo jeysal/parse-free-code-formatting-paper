@@ -1,2 +1,133 @@
 \subsection{Soft line breaks}
-% TODO greedy line breaks with separation avoidance and inevitable length violation recovery
+Next, we add soft line breaking capabilities to our formatter.
+We use the greedy line-filling algorithm,
+as it operates in a simple, linear way
+that can be implemented in our formatter without
+adding significantly to its code complexity.
+We will also employ our strategy for
+gracefully handling inevitable length limit violations,
+but will omit the separation avoidance,
+which would require more fundamental changes
+to the printer implementation.
+
+Let us take a look at what our printer currently looks like.
+With a few simplifications applied,
+notably the extraction of the hard line break insertion logic
+that we implemented into its own function, \code{breakLine()},
+the code we have at this point is shown
+in figure~\ref{fig:printerBeforeSoftLineBreaks} on a separate page.
+
+\begin{figure}[p]
+  \begin{minted}{javascript}
+  const print = tokens => {
+    let code = '';
+    let nestingLevel = 0;
+    let prevAllowsSpace = false;
+    let consecutiveBreaks = 2;
+
+    // helpers
+    const breakLine = () => {
+      code += '\n';
+      consecutiveBreaks++;
+      prevAllowsSpace = false; // line break replaces space
+    };
+
+    // main loop
+    for (const { type, value } of tokens) {
+      if (prevAllowsSpace && allowsSpaceBefore(type))
+        code += ' ';
+
+      // print token
+      code += value;
+
+      // set previous information for next iteration
+      prevAllowsSpace = allowsSpaceAfter(type);
+
+      // hard line break
+      if (type === 'emptyLine')
+        while (consecutiveBreaks < 2)
+          breakLine();
+      else consecutiveBreaks = 0;
+
+      if (type === 'leftPar')
+        nestingLevel++;
+      if (type === 'rightPar' && --nestingLevel === 0)
+        breakLine();
+    }
+
+    return code;
+  };
+  \end{minted}
+  \caption{The printer code before implementation of
+    soft line breaking.}\label{fig:printerBeforeSoftLineBreaks}
+\end{figure}
+
+We declare a variable to track the amount of characters
+we printed since the last line break outside of the loop:
+\begin{minted}{javascript}
+  let lineLength = 0;
+\end{minted}
+In \code{breakLine}, we reassign it to 0
+so we can start over when we enter a new line.
+We also declare a length limit that we will try to never exceed.
+This limit could be set by configuration options;
+we will assume a length limit of 80 for our purposes:
+\begin{minted}{javascript}
+  const MAX_LINE_LENGTH = 80;
+\end{minted}
+
+Another change that we need to make to the current code
+concerns the spacing information in the first statement of the loop.
+We need to know whether a space will be printed before the token,
+because whitespace also counts towards the line length.
+We extract the condition into a variable,
+and leave some space before the space printing
+to insert our soft line breaking logic into:
+\begin{minted}{javascript}
+  let spaceBefore = prevAllowsSpace && allowsSpaceBefore(type);
+
+  // soft line breaks
+
+  if(spaceBefore)
+    code += value;
+\end{minted}
+
+In the most common and simple case,
+we can just go ahead and print our token
+on the current line,
+perhaps with a preceding space.
+Then we will simply add the length of the token value
+to the current \code{lineLength},
+possibly adding another 1 on top if
+the token will be printed with a space in front of it.
+\begin{minted}{javascript}
+  let printLength = value.length + spaceBefore;
+
+  // what if the token does not fit?
+
+  lineLength += printLength;
+\end{minted}
+On a side note, adding the boolean \code{spaceBefore}
+in this code snippet is merely a shorter way of
+writing \code{+ (spaceBefore ? 1 : 0)}.
+
+But if the token does not fit on the same line anymore
+without exceeding the length limit,
+we will need to print a line break first:
+\begin{minted}{javascript}
+  if (lineLength + printLength > MAX_LINE_LENGTH) {
+    breakLine();
+
+    // No space after all, just the break
+    if (spaceBefore) printLength--;
+    spaceBefore = false;
+  }
+\end{minted}
+In that case, we also prohibit printing a space before the current,
+because the line break takes its place instead.
+If necessary, the space is also subtracted back from the length
+that we determined for the current token,
+so we do not start the new line with an off-by-one \code{lineLength} value.
+
+\paragraph{Handling length limit violation}
+% TODO
