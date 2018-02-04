@@ -42,11 +42,11 @@ depending on the context they appear in, for both line comments:
   d e)
 \end{minted}
 
-We can convert line breaks inside block comments to hard line breaks
+We could go further and convert line breaks inside block comments to hard line breaks
 and split the block comment into multiple tokens of type block comment,
 while only the first keeps the starting comment delimiter \code{#|},
 and only the last keeps the terminating comment delimiter \code{|#}.
-This has the effect that our printer understands that the comment
+This would have the effect that our printer understands that the comment
 is not entirely on one line, and it might in the multi-line example above print
 \begin{minted}{lisp}
   (a b c #| spanning
@@ -58,10 +58,10 @@ on the first and last lines of the block comment for the remaining tokens.
 
 It would also cause the printer to apply indentation inside the block comment.
 Previously, indentation was primarily relevant after soft line breaks,
-because our hard line breaks occurred in locations where the nesting and,
-consequently, the indentation was zero.
+because our hard line breaks occurred in locations
+where the nesting and indentation were zero.
 With hard line breaks from block comments appearing in the middle of expressions,
-we can profit from the existing indentation algorithm to align comments appropriately:
+we could profit from the existing indentation algorithm to align comments appropriately:
 \begin{minted}{lisp}
   (a (b (c (d (e (f (g
               h #| multi
