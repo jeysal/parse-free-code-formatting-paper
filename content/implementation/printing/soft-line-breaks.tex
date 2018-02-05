@@ -71,9 +71,9 @@ In \code{breakLine}, we reassign it to 0
 so we can start over when we enter a new line.
 We also declare a length limit that we will try to never exceed.
 This limit could be set by configuration options;
-we will assume a length limit of 80 for our purposes:
+we will assume a length limit of 42 for our purposes:
 \begin{minted}{javascript}
-  const MAX_LINE_LENGTH = 80;
+  const MAX_LINE_LENGTH = 42;
 \end{minted}
 
 Another change that we need to make to the current code
