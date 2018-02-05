@@ -1,3 +1,93 @@
 \subsection{Indentation}
-% TODO regular indentation, not the aligning extension
-% TODO move decrement of nestingLevel to PRE_PRINT, as required by 4.3.2 Indentation
+For the last aspect to implement, indentation,
+we will use the regular nesting-based method,
+not the possible aligning variant
+we identified as an extension.
+
+The first small change we need to make
+stems from the realization that
+decrementing the nesting level
+because of a \code{rightPar} needs to happen
+\textit{before} printing the token
+and potentially inserting a
+soft line break in front of it.
+So we move the decrement up
+to the beginning of the loop body
+and then later on we merely
+read and compare the nesting level:
+\begin{minted}{javascript}
+  // nesting decrement needs to happen before print
+  if (type === 'rightPar') nestingLevel--;
+
+  // rest of the loop
+
+  if (type === 'rightPar' && nestingLevel === 0) hardBreak();
+\end{minted}
+
+Now we can add the actual code for printing indentation spaces.
+After calling \code{breakLine()} from \code{softBreak()},
+we generate an indentation string with
+a total of \code{nestingLevel * INDENT_SIZE} spaces.
+Just like we defined \code{MAX_LINE_LENGTH} as 80,
+we define \code{INDENT_SIZE} as 2 for further examples.
+We append the indentation string to the code
+and update the current \code{lineLength} to match:
+\begin{minted}{javascript}
+  const softBreak = () => {
+    breakLine();
+
+    const indentSize = nestingLevel * INDENT_SIZE;
+    const indentation = Array(indentSize)
+      .fill(' ')
+      .join('');
+
+    code += indentation;
+    lineLength = indentSize;
+  };
+\end{minted}
+We can now also move the assignment of 0 to \code{lineLength}
+from \code{breakLine()} into \code{hardBreak()} ---
+it would only get overwritten anyway.
+
+\paragraph{Interaction with empty lines}
+This indentation code works,
+but has an awkward interaction with empty lines.
+It is possible to generate code like this:
+\begin{minted}{lisp}
+; limit -|
+(xxxxx (
+    xxxxx
+
+xxxxx
+    xxx))
+\end{minted}
+An empty line only generates hard breaks,
+so the third identifier in this example
+is not indented at all.
+
+We can avoid this by changing the
+empty line insertion code from
+\begin{minted}{javascript}
+  while (consecutiveBreaks < 2) breakLine();
+\end{minted}
+to
+\begin{minted}{javascript}
+  if (consecutiveBreaks === 0) hardBreak();
+    softBreak();
+\end{minted}
+, so only the first break (if present at all) is a hard line break,
+and the second break is a soft line break
+that indents the next line correctly.
+
+This indentation could be considered a violation of
+the rule that the nesting level decreases \textit{before}
+a \code{rightPar}, potentially printing something like
+\begin{minted}{lisp}
+; limit -|
+(xxxxxxxxx
+  )
+\end{minted}
+because we do not actually indent while printing the \code{rightPar},
+but while printing the \code{emptyLine},
+however this is a rare edge case
+that is probably not worth introducing an extra check for.
