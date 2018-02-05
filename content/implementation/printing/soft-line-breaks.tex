@@ -130,4 +130,51 @@ that we determined for the current token,
 so we do not start the new line with an off-by-one \code{lineLength} value.
 
 \paragraph{Handling length limit violation}
-% TODO
+If a very long token or the indentation
+that we will introduce in our printer next
+force us to print beyond the line length limit,
+we decided that we want to temporarily increase
+the limit to the length of the violating line
+until the next hard line break.
+This helps mitigate the effect of the violation,
+especially if it was caused by indentation,
+which is likely to remain deep
+for further lines we need to print.
+
+To implement this mechanism,
+we have to start distinguishing between
+hard and soft line breaks in the printer.
+We create two functions
+\code{softBreak} and \code{hardBreak}
+that both delegate to \code{breakLine}:
+\begin{minted}{javascript}
+  const softBreak = () => {
+    breakLine();
+  };
+  const hardBreak = () => {
+    breakLine();
+  };
+\end{minted}
+The \code{breakLine()} call we just added
+becomes \code{softBreak()}, while
+the two calls in the conditional statements
+that handle \code{emptyLine}s and \code{rightPar}s
+becomes \code{hardBreak()}s.
+
+To track the current, possibly increased, line length limit
+until the next hard break, we use a variable initialized with
+\begin{minted}{javascript}
+  let maxLineLength = MAX_LINE_LENGTH;
+\end{minted}
+and reset to the same constant in the \code{hardBreak} function.
+We replace the usage of the constant in the condition
+that we introduced for deciding whether to insert a soft line break
+by a usage of this variable.
+
+To make sure that the variable is increased
+after we printed a token beyond the limit,
+we reassign it to the current line length or itself,
+whichever is higher, after the soft line breaking code:
+\begin{minted}{javascript}
+  maxLineLength = Math.max(lineLength, maxLineLength);
+\end{minted}
