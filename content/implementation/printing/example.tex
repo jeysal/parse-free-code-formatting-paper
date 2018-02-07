@@ -1,0 +1,50 @@
+\section{Formatting example}
+If we run some Lisp-like code
+based on common examples from Wikipedia ---
+including the factorial example we used earlier ---
+through the lexer and printer,
+we get the results shown in figure~\ref{fig:formattingExample}
+on a separate page.
+
+\begin{figure}[p]
+  \begin{minted}{lisp}
+    ; Input:
+    ; factorial
+    (defun factorial(n)(if(=n 0)1(*n(factorial(-n 1)))))
+
+    ; fibonacci
+    (defun fib(n)(if(lte n 2)1(+(fib(-n 1))(fib(-n 2)))))
+
+    ; birthday paradox, already well-formatted
+    (defconstant yearsize 365)
+    (defun birthdayparadox (probability numberofpeople)
+      (let ((newprobability (* (/
+          (- yearsize numberofpeople) yearsize) probability)))
+        (if (lt newprobability (/ 1 2))
+            (1+ numberofpeople)
+            (birthdayparadox newprobability
+                             (1+ numberofpeople)))))
+
+    ; Output:
+    ; factorial
+    (defun factorial (n) (if (= n 0) 1 (* n (
+            factorial (- n 1)))))
+
+    ; fibonacci
+    (defun fib (n) (if (lte n 2) 1 (+ (fib (-
+              n 1)) (fib (- n 2)))))
+
+    ; birthday paradox, already well-formatted
+    (defconstant yearsize 365)
+    (defun birthdayparadox (probability
+        numberofpeople) (let ((newprobability
+            (* (/ (- yearsize numberofpeople)
+                yearsize) probability))) (if (
+            lt newprobability (/ 1 2)) (1 +
+            numberofpeople) (birthdayparadox
+            newprobability (1 + numberofpeople
+            )))))
+  \end{minted}
+  \caption{Exemplary formatting input and
+    output code}\label{fig:formattingExample}
+\end{figure}
