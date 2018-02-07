@@ -63,8 +63,13 @@
   \newpage
 
   \pagenumbering{arabic}
+
   \input{abstract.tex}
   \input{content/index.tex}
 
+  \clearpage
+  \addcontentsline{toc}{chapter}{Bibliography}
   \printbibliography
+
+  \input{appendix.tex}
 \end{document}
