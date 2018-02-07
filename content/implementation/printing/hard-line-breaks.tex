@@ -34,6 +34,13 @@ We achieve this with the following code:
   }
 \end{minted}
 
+Additionally, we need to insert a hard line break
+after a line comment to ensure that
+the following tokens are not interpreted as part of the comment.
+So we add another check for \code{lineComment}s that
+inserts a hard line break in the same way,
+disregarding the current \code{nestingLevel}.
+
 \paragraph{Preservation of empty lines}
 When discussing the hard line breaks for our Lisp-like language,
 we also noticed that it is important

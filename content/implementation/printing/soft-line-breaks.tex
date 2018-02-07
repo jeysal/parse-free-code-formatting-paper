@@ -53,6 +53,8 @@ in figure~\ref{fig:printerBeforeSoftLineBreaks} on a separate page.
         nestingLevel++;
       if (type === 'rightPar' && --nestingLevel === 0)
         breakLine();
+      if (type === 'lineComment')
+        breakLine();
     }
 
     return code;
@@ -155,11 +157,11 @@ that both delegate to \code{breakLine}:
     breakLine();
   };
 \end{minted}
-The \code{breakLine()} call we just added
-becomes \code{softBreak()}, while
-the two calls in the conditional statements
-that handle \code{emptyLine}s and \code{rightPar}s
-becomes \code{hardBreak()}s.
+The \code{breakLine} call we just added
+becomes \code{softBreak}, while
+the calls in the conditional statements
+that handle \code{emptyLine}s, \code{rightPar}s
+and \code{lineComment}s become \code{hardBreak}s.
 
 To track the current, possibly increased, line length limit
 until the next hard break, we use a variable initialized with
