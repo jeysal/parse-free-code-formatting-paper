@@ -1,0 +1,47 @@
+\chapter{Conclusion}
+The given example shows that previously unformatted code
+is printed out in a significantly more readable,
+albeit not perfect, way.
+The spacing and indentation is appropriate,
+but soft line breaks could be placed much better;
+they often cut right through expressions with our implementation.
+
+Code that was already formatted by a human, however,
+becomes significantly less readable
+because the soft line breaks are placed
+without awareness of the structure of the expressions
+formed by the surrounding tokens.
+This is not to blame on omitting the separation avoidance algorithm ---
+in the example code, the relevant tokens were rarely separated anyway.
+Trying to break at a high point in the syntax tree
+like many established algorithms do
+may have helped with this issue.
+
+We have managed to implement the basics of formatting without a parser.
+The example code had its empty lines preserved;
+comments and hard breaks are in the right places.
+The indentation works fine, but it is ruined by
+the soft line breaks that we did not manage to place sensibly
+for our Lisp-like language.
+If we want do better in this aspect,
+we will probably need to look at the expression tree structure
+in a way that essentially equates to parsing
+or at least give up on the strict approach
+of never looking at more than two consecutive tokens
+and never backtracking in the token stream.
+
+It would be interesting to implement a
+less minimalistic parse-free formatter
+for a real, widely used programming language.
+Such a formatter could be compared with
+existing formatters for the same language
+too evaluate how significant the performance benefit is.
+Some language could perhaps be
+better formatted than a Lisp dialect with this method,
+because they have many small statements
+instead of the few large expressions from Lisp,
+reducing the impact of a suboptimal soft line breaking algorithm.
+It might also make sense to implement a formatter
+that specifically targets the use cases
+we expect a parse-free routine to be most suitable for
+--- large batches of minified code.
