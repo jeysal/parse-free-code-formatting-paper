@@ -58,7 +58,7 @@ to be lower in comparison to an ordinary formatter,
 because we do not need to hold a large tree structure in the memory.
 
 \subsection{Streaming}
-A non-parsing formatter could potentially be capable of writing the first line of output
+A parse-free formatter could potentially be capable of writing the first line of output
 right after reading the first few tokens of input and continuing to write quite consistently
 as it progresses through the input code, because conceivable implementations would never
 need to look at more than a section between two hard line breaking tokens at once.
