@@ -1,6 +1,7 @@
 \chapter{An ordinary formatting procedure}
+% TODO introduction - what is this chapter about?
 A code formatter that takes an unformatted source code file as its input and
-produces a formatted source code file as its output typically operates in three main steps:
+produces a formatted source code file as its output typically operates in three main steps: % TODO source
 \begin{enumerate}
   \item \textit{lexing} (also known as \textit{tokenizing} or \textit{lexical analysis})
   \item \textit{parsing} (also known as \textit{syntactic analysis})
@@ -60,7 +61,7 @@ For the input tokens
   if, (, a, ==, b, ), {, c, =, a, +, 2, *, b, ;, }
 \end{minted}
 in a C-like language, a parser might return the abstract syntax tree
-shown in figure~\ref{fig:ifStmtAst} on a separate page.
+shown in Figure~\ref{fig:ifStmtAst} on a separate page.
 
 \begin{landscape}
   \begin{figure}[h]
@@ -92,7 +93,7 @@ shown in figure~\ref{fig:ifStmtAst} on a separate page.
 \textit{Printing} transforms an abstract syntax tree (or parse tree)
 to a string of source code that matches the desired format.
 
-For the input AST shown in figure~\ref{fig:ifStmtAst} in a C-like language,
+For the input AST shown in Figure~\ref{fig:ifStmtAst} in a C-like language,
 a printer might return the code string:
 
 \begin{minted}{c}
@@ -101,8 +102,9 @@ a printer might return the code string:
   }
 \end{minted}
 
-Above example shows the first three of the four main concerns of the printing step in a code formatter,
-which we will all discuss in the following.
+Above example shows the first three of the four main concerns
+of the printing step in a code formatter,
+which we will all describe in the following.
 
 \subsection{Spacing}
 \textit{Spacing} is necessary because we want to see gaps for instance
@@ -213,3 +215,5 @@ exactly in those places where the original source code contained them,
 because these empty lines usually function as
 separators between logically coherent sections of the code,
 which the printer cannot possibly guess from the tree structure.
+
+% TODO short summary

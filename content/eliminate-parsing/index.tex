@@ -46,7 +46,7 @@ printing out nicely formatted source code just based on the tokens recognized by
 There are some obvious advantages that such a formatter would have.
 
 \subsection{Efficiency}
-In a quick test run performed by the author, the popular JavaScript parser `acorn'
+In a quick test run performed by the author, the popular JavaScript parser `acorn' \autocite{acorn}
 took around three to five times as long to parse a large bundle of JavaScript code
 than to just tokenize the same code.
 Parsing can be a major bottleneck in the formatting pipeline,
@@ -71,7 +71,8 @@ but not its syntactic grammar, can be more easily adapted to format other langua
 even if their syntax is vastly different.
 
 \section{Drawbacks}
-These benefits, however, come at a cost.
+These benefits, however, come at a cost for our formatting style,
+which we address in the following sections.
 
 \subsection{Consistency}
 It is clear that we will not be able to achieve the same degree of consistency
@@ -125,3 +126,5 @@ through the \code{LESSOPEN} environment variable; \autocite{lessMan}
 this could be used for a formatter just as it is sometimes used for syntax highlighting
 and it would greatly benefit from streaming-enabled formatting.
 Some IDEs and editors can invoke an external program to process a file on keypress as well.
+
+% TODO summary
