@@ -127,4 +127,15 @@ this could be used for a formatter just as it is sometimes used for syntax highl
 and it would greatly benefit from streaming-enabled formatting.
 Some IDEs and editors can invoke an external program to process a file on keypress as well.
 
-% TODO summary
+\section{Summary}
+By using a formatting pipeline that consists of
+just the lexing and printing steps,
+we can hope to achieve higher performance and efficiency
+while still keeping the formatter
+easily adaptable to different languages.
+Increased source code throughput can be helpful
+for formatting large minified bundles of code,
+as they are often shipped to web browsers nowadays.
+At the same time, we have to condone that
+the quality and flexibility of our output format
+will inevitably deteriorate with a parse-free approach.
