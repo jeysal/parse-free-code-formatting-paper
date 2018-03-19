@@ -6,8 +6,7 @@ These examples are not a complete test suite that covers all cases.
 
 \paragraph{Regular token types}
 The lexer recognizes the regular token types
-as defined by the language grammar
-and ignores whitespace inbetween them:
+as defined by the language grammar:
 \begin{minted}{lisp}
   (lambda id1 &id2
     (= true 123))
@@ -28,6 +27,8 @@ is tokenized to:
     { type: 'rightPar', value: ')' },
   ]
 \end{minted}
+Whitespace inbetween the tokens is ignored,
+unless it is picked up by the \textit{empty line} rule.
 
 \paragraph{Line comments}
 The lexer recognizes line comments

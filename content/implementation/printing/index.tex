@@ -1,6 +1,16 @@
 \section{Printing}
+Analogous to the lexer, we implement the printer by
+defining its signature and basic structure
+and then successively enriching the code
+with logic that for each aspect of printing
+that we need to tackle.
+When the final bit of printing logic is implemented,
+we can look at some examples of code
+that is passed through the finished
+lexer and printer functions for reformatting.
+
 Once our lexer has tokenized the input code,
-we pass the array of tokens it generated into the printer.
+the array of tokens it generated is passed into the printer.
 The printer will then generate well-formatted output code from those tokens.
 Its signature is the inverse of the lexer:
 \begin{minted}{typescript}

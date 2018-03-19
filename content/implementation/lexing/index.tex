@@ -8,6 +8,18 @@ We could use a parser generator such as ANTLR to generate a lexer only,
 but due to the simple nature of our language,
 a lexer will be sufficiently trivial to implement ourselves.
 
+To implement the lexer,
+we will first define its signature
+and give example input and output
+that describes its desired behavior
+and can be used as a basic test suite
+for the lexer function.
+We construct a code skeleton for the
+basic structure of the lexer function
+and then successively add lexing rules
+for each type of token,
+including comments and empty lines.
+
 The lexer function has the signature
 \begin{minted}{typescript}
   (code: string) => {
