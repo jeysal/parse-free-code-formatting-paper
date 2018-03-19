@@ -216,7 +216,7 @@ which can be especially handy if the language allows us to place the trailing co
 This concern is arguably the most complex aspect and has been subject to a substantial amount of research in the past.
 \autocite{designPrettyPrintingLib}\autocite{prettierPrinter}
 
-\vspace{1cm} \paragraph{Shape retention}
+\paragraph{Side note: shape retention}
 With regard to all four concerns,
 different formatters may choose to preserve
 the original shape of the source code to a varying degree.
@@ -227,4 +227,19 @@ because these empty lines usually function as
 separators between logically coherent sections of the code,
 which the printer cannot possibly guess from the tree structure.
 
-% TODO short summary
+\section{Summary}
+We now know what tokens are,
+what kind of information the different types of syntax trees contain,
+and which formatting steps can be used to translate between these artifats
+and from or to source code.
+In the next chapter, we propose a formatting procedure
+that operates on a strict subset of these steps and artifacts
+and outline its distinct benefits and drawbacks.
+
+We have also unraveled four mostly separate
+aspects of printing formatted source code.
+Breaking up the complex printing task into these aspects
+enables us to take a structured approach to printing
+later in the course of this paper,
+where we will conceive and implement an algorithm
+by building it up one aspect at a time.
