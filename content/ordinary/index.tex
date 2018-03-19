@@ -1,5 +1,15 @@
 \chapter{An ordinary formatting procedure}
-% TODO introduction - what is this chapter about?
+In this chapter, we examine the sequence of steps
+that most formatting pipelines use to process the source code.
+We will get a grasp on the purpose of the lexing and parsing steps,
+how they compare to the corresponding routines in a compiler and
+how the syntax tree format can affect the formatting result.
+We deal with the printing process more in-depth and
+break it up into four key aspects.
+We briefly address some specifics of languages and formatters
+that a concrete formatter may or may not have to tackle,
+such as `virtual tokens' and original code shape retention.
+
 A code formatter that takes an unformatted source code file as its input and
 produces a formatted source code file as its output typically operates in three main steps:
 \autocite{parsingBroadSense}\autocite{parsingAndReflectivePrinting}
