@@ -13,6 +13,7 @@ But even some of those editors --- such as the web development-focused Microsoft
 now include formatting tools in their core distributions together with
 Git version control integration, syntax highlighting and other tooling that is deemed essential,
 disposing the need to install an additional plugin that provides code formatting support.
+\autocite{vsCodeJavascriptDoc}
 
 These formatters usually work by lexing and parsing the input code
 in a process similar to the one a compiler for the same language would utilize,
@@ -21,6 +22,7 @@ they use the syntactic information obtained by parsing
 to print out the token stream obtained by lexing
 in a defined format that humans consider readable and comprehensible,
 optionally preserving the shape of the original code to some degree.
+\autocite{prettyGoodFormattingPipeline}
 
 We introduce a procedure that skips the parsing step and
 build a formatter that can move on from the lexing step straight to printing.
