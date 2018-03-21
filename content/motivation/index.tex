@@ -24,13 +24,26 @@ in a defined format that humans consider readable and comprehensible,
 optionally preserving the shape of the original code to some degree.
 \autocite{prettyGoodFormattingPipeline}
 
+While many of the algorithms used in common code formatters
+operate on plain streams of tokens, \autocite{prettyprinting}
+they also require contextual information
+to recognize the meaning of tokens and groups of tokens
+and determine appropriate positions for the insertion of spaces or line breaks.
+Parsing provides that information, which we can build smart printing routines on,
+but it is also an expensive operation on top of the aforegoing lexing
+and forces us to couple our formatter implementation more tightly
+to the syntactical grammar and thus the concrete target language.
+
 We introduce a procedure that skips the parsing step and
 build a formatter that can move on from the lexing step straight to printing.
-While this procedure will generate less information about the code we are operating on and
+This procedure will generate less information about the code we are operating on and
 thus necessarily limit our capability to generate code
-formatted in a consistent and customizable output format,
-our formatter will become quite easy to adapt to vastly different languages and
-we can potentially achieve higher formatting performance with increased code throughput.
+formatted in a consistent and customizable output format.
+
+At the same time, our formatter will become quite easy to adapt to vastly different languages,
+because we only need to know its token types instead of the entire syntactic grammar and
+we can potentially achieve higher formatting performance and start emitting output earlier
+because the necessity for an initial parsing step no longer applies.
 
 In the following chapter, we will roughly outline how code formatters typically work.
 Once we have established fundamental comprehension of their technical background,
