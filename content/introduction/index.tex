@@ -46,21 +46,21 @@ we can potentially achieve higher formatting performance and start emitting outp
 because the necessity for an initial parsing step no longer applies.
 
 \section{Structure}
-In Chapter \ref{chap:ordinary}, we will roughly outline how code formatters typically work.
+In Chapter~\ref{chap:ordinary}, we will roughly outline how code formatters typically work.
 Once we have established fundamental comprehension of their technical background,
 we can then move on to propose an alternative method that relinquishes parsing.
 We address potential benefits and uses,
-but also drawbacks of this method in Chapter \ref{chap:eliminate-parsing}.
+but also drawbacks of this method in Chapter~\ref{chap:eliminate-parsing}.
 
 Based on a simple Lisp-like target language,
 we then design a parse-free printing algorithm
 that deals with all the major aspects of code formatting
 and gracefully handles most edge cases
-in Chapter \ref{chap:lisp-like}.
+in Chapter~\ref{chap:lisp-like}.
 The very same algorithm then serves as the theoretical foundation
 that we build a complete implementation of a formatter
 for the language upon and test it with example code input
-in Chapter \ref{chap:implementation}.
+in Chapter~\ref{chap:implementation}.
 
 The goal is for this implementation to tokenize code in the given Lisp-like language
 and print it back out with certain guarantees on
