@@ -46,6 +46,12 @@ printing out nicely formatted source code just based on the tokens recognized by
 We outline some advantages that such a formatter would have in the following sections.
 
 \subsection{Efficiency}
+Parser implementations commonly have quadratic or worse polynomial time complexity in theory,
+but achieve near-linear time complexity for the language grammars used in practice.
+\autocite{antlrLlStar} \autocite{antlrAllStar}
+But even with time complexity similar to lexing,
+parsing still adds another step on top that is even more expensive than lexing itself.
+
 In a quick test run performed by the author, the popular JavaScript parser `acorn' \autocite{acorn}
 took around three to five times as long to parse a large bundle of JavaScript code
 than to just tokenize the same code.
