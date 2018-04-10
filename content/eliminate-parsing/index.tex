@@ -73,8 +73,10 @@ formatters that parse the code first.
 
 \subsection{Adaptability}
 A formatter that only has to understand the lexical grammar of a language,
-but not its syntactic grammar, can be more easily adapted to format other languages,
-even if their syntax is vastly different.
+but not its syntactic grammar, can be more easily adapted to format other languages.
+For instance, different C-like languages can be formatted
+without implementing formatting of block statements
+that are surrounded by curly braces more than once.
 
 \section{Drawbacks}
 These benefits, however, come at a cost for our formatting style,
