@@ -85,10 +85,12 @@ It is clear that we will not be able to achieve the same degree of consistency
 for some of the harder aspects of formatting
 when the abstract syntax of expressions is the same,
 but the concrete syntax differs.
+For instance, a parenthesized expression may be split with line breaks
+in a different way than a semantically equivalent expression without parentheses.
 
 \subsection{Power}
-We cannot trivially make significant changes --- such as removing parentheses as mentioned earlier ---
-to the code, because the lack of syntactic information renders us unable to easily judge whether
+We also cannot remove unnecessary parentheses or trivially make other significant changes to the code,
+because the lack of syntactic information renders us unable to easily judge whether
 \begin{itemize}
   \item such a modification would alter the semantics of the code and
   \item such a modification would actually increase the readability of the code
