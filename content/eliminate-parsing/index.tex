@@ -91,7 +91,9 @@ For instance, a parenthesized expression may be split with line breaks
 in a different way than a semantically equivalent expression without parentheses.
 
 \subsection{Power}
-We also cannot remove unnecessary parentheses or trivially make other significant changes to the code,
+We also cannot remove unnecessary parentheses
+like some formatters that print code from an AST do \autocite{prettierRelease}
+or trivially make other significant changes to the code,
 because the lack of syntactic information renders us unable to easily judge whether
 \begin{itemize}
   \item such a modification would alter the semantics of the code and
