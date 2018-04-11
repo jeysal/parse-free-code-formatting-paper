@@ -104,8 +104,18 @@ because the lack of syntactic information renders us unable to easily judge whet
 Information about constructs in the code and about the greater picture is often unavailable and
 we have to deal with tight limitations on what we can safely change in the code without altering semantics.
 This means that we cannot always just pick a preferred formatting style that we want to produce,
-but instead have to accept compromises on the output style and focus on what we \textit{can} produce.
-Allowing for further user configuration options of the desired output format would be borderline inconceivable.
+but instead have to accept compromises on the output style
+and focus on what we \textit{can} produce efficiently.
+
+Allowing for further user configuration options of the desired output format
+would be borderline inconceivable at this point.
+However, a lack of configuration options is not necessarily a bad thing
+as varying formatting style can fragment a language ecosystem and lead to unnecessary controversy.
+For this reason,
+both formatters included in the core toolkit of their language \autocite{gofmtBlogPost}
+and third-party formatters \autocite{prettierOptionPhilosophy}
+have recently opted to value convention over configuration and
+provide no or only the most indispensable configuration options.
 
 \section{Uses}
 This kind of formatter would not be suitable for some of the common use cases, including both
